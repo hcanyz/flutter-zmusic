@@ -31,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          NeteaseMusicApi().topListByCategory().then((value) {});
           NeteaseMusicApi().topList().then((value) {});
         },
         child: Icon(Icons.add),
