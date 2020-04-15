@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zmusic/app_home/data/data.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,7 +30,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          NeteaseMusicApi().topList().then((value) {});
+        },
         child: Icon(Icons.add),
       ),
     );
