@@ -1,10 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:zmusic/lib_common/data/music_api.dart';
+import 'package:zmusic/app_home/bean/bean.dart';
 import 'package:zmusic/vendor/dio_ext.dart';
 
+import 'music_api.dart';
 import 'netease_util.dart';
 
 class NeteaseMusicApi implements MusicApi {
@@ -30,14 +32,14 @@ class NeteaseMusicApi implements MusicApi {
   }
 
   @override
-  Future<String> topList() {
+  Future<OverallListWrap> topList() {
     var params = {'limit': 30, 'offset': 0};
     return Https.dio
         .postUri(_joinUri('/weapi/playlist/highquality/list'),
             data: params, options: _joinOptions())
         .then((Response value) {
       debugPrint('$_TAG   topList response ${value.data}');
-      return value.toString();
+      return OverallListWrap.fromJson(jsonDecode(value.data));
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:zmusic/app_home/data/data.dart';
+
+import 'app_home/data/data.dart';
 
 void main() {
   runApp(MyApp());

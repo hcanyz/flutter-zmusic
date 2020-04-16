@@ -30,6 +30,9 @@ dependencies:
   # encrypt
   encrypt: ^4.0.0
 
+  # x gson
+  json_annotation: ^3.0.1
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
@@ -37,6 +40,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # x gson
+  build_runner: ^1.8.1
+  json_serializable: ^3.2.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
