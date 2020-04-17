@@ -1,7 +1,7 @@
 import 'package:zmusic/app_home/bean/bean.dart';
 
 abstract class MusicApi {
-  Future<OverallListWrap> topList();
+  Future<HighqualityPlayListWrap> highqualityPlayList();
 
-  Future<String> topListByCategory();
+  Future<CategoryPlayListWrap> categoryPlayList();
 }

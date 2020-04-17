@@ -5,7 +5,7 @@ class Https {
 
   static Dio _dio;
 
-  static Map<String, String> optHeader = {'accept-language': 'zh-cn'};
+  static Map<String, String> optHeader = {};
 
   static Dio get dio =>
       _dio ??= Dio(BaseOptions(connectTimeout: 5000, headers: optHeader));

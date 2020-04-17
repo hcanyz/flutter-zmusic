@@ -32,26 +32,26 @@ class NeteaseMusicApi implements MusicApi {
   }
 
   @override
-  Future<OverallListWrap> topList() {
+  Future<HighqualityPlayListWrap> highqualityPlayList() {
     var params = {'limit': 30, 'offset': 0};
     return Https.dio
         .postUri(_joinUri('/weapi/playlist/highquality/list'),
             data: params, options: _joinOptions())
         .then((Response value) {
       debugPrint('$_TAG   topList response ${value.data}');
-      return OverallListWrap.fromJson(jsonDecode(value.data));
+      return HighqualityPlayListWrap.fromJson(jsonDecode(value.data));
     });
   }
 
   @override
-  Future<String> topListByCategory() {
+  Future<CategoryPlayListWrap> categoryPlayList() {
     var params = {'id': 3779629, 'limit': 30, 'offset': 0};
     return Https.dio
         .postUri(_joinUri('/weapi/v3/playlist/detail'),
             data: params, options: _joinOptions())
         .then((Response value) {
       debugPrint('$_TAG   topListByCategory response ${value.data}');
-      return value.toString();
+      return CategoryPlayListWrap.fromJson(jsonDecode(value.data));
     });
   }
 

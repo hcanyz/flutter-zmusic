@@ -6,9 +6,9 @@ part of 'bean.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-OverallListItem _$OverallListItemFromJson(Map<String, dynamic> json) {
-  return OverallListItem()
-    ..id = OverallListItem._stringFromInt(json['id'] as int)
+PlayListItem _$PlayListItemFromJson(Map<String, dynamic> json) {
+  return PlayListItem()
+    ..id = _dynamicToString(json['id'])
     ..name = json['name'] as String
     ..description = json['description'] as String
     ..coverImgUrl = json['coverImgUrl'] as String
@@ -22,12 +22,20 @@ OverallListItem _$OverallListItemFromJson(Map<String, dynamic> json) {
     ..shareCount = json['shareCount'] as int
     ..commentCount = json['commentCount'] as int
     ..trackCount = json['trackCount'] as int
-    ..trackNumberUpdateTime = json['trackNumberUpdateTime'] as int;
+    ..trackNumberUpdateTime = json['trackNumberUpdateTime'] as int
+    ..creator = json['creator'] == null
+        ? null
+        : PlayListCreator.fromJson(json['creator'] as Map<String, dynamic>)
+    ..subscribers = (json['subscribers'] as List)
+        ?.map((e) => e == null
+            ? null
+            : PlayListSubscriber.fromJson(e as Map<String, dynamic>))
+        ?.toList();
 }
 
-Map<String, dynamic> _$OverallListItemToJson(OverallListItem instance) =>
+Map<String, dynamic> _$PlayListItemToJson(PlayListItem instance) =>
     <String, dynamic>{
-      'id': OverallListItem._stringToInt(instance.id),
+      'id': instance.id,
       'name': instance.name,
       'description': instance.description,
       'coverImgUrl': instance.coverImgUrl,
@@ -42,20 +50,113 @@ Map<String, dynamic> _$OverallListItemToJson(OverallListItem instance) =>
       'commentCount': instance.commentCount,
       'trackCount': instance.trackCount,
       'trackNumberUpdateTime': instance.trackNumberUpdateTime,
+      'creator': instance.creator,
+      'subscribers': instance.subscribers,
     };
 
-OverallListWrap _$OverallListWrapFromJson(Map<String, dynamic> json) {
-  return OverallListWrap()
+NeteaseUserInfo _$NeteaseUserInfoFromJson(Map<String, dynamic> json) {
+  return NeteaseUserInfo()
+    ..userId = _dynamicToString(json['userId'])
+    ..nickname = json['nickname'] as String
+    ..avatarUrl = json['avatarUrl'] as String
+    ..signature = json['signature'] as String
+    ..city = json['city'] as int
+    ..province = json['province'] as int
+    ..backgroundUrl = json['backgroundUrl'] as String
+    ..expertTags =
+        (json['expertTags'] as List)?.map((e) => e as String)?.toList();
+}
+
+Map<String, dynamic> _$NeteaseUserInfoToJson(NeteaseUserInfo instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'nickname': instance.nickname,
+      'avatarUrl': instance.avatarUrl,
+      'signature': instance.signature,
+      'city': instance.city,
+      'province': instance.province,
+      'backgroundUrl': instance.backgroundUrl,
+      'expertTags': instance.expertTags,
+    };
+
+PlayListCreator _$PlayListCreatorFromJson(Map<String, dynamic> json) {
+  return PlayListCreator()
+    ..userId = _dynamicToString(json['userId'])
+    ..nickname = json['nickname'] as String
+    ..avatarUrl = json['avatarUrl'] as String
+    ..signature = json['signature'] as String
+    ..city = json['city'] as int
+    ..province = json['province'] as int
+    ..backgroundUrl = json['backgroundUrl'] as String
+    ..expertTags =
+        (json['expertTags'] as List)?.map((e) => e as String)?.toList();
+}
+
+Map<String, dynamic> _$PlayListCreatorToJson(PlayListCreator instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'nickname': instance.nickname,
+      'avatarUrl': instance.avatarUrl,
+      'signature': instance.signature,
+      'city': instance.city,
+      'province': instance.province,
+      'backgroundUrl': instance.backgroundUrl,
+      'expertTags': instance.expertTags,
+    };
+
+PlayListSubscriber _$PlayListSubscriberFromJson(Map<String, dynamic> json) {
+  return PlayListSubscriber()
+    ..userId = _dynamicToString(json['userId'])
+    ..nickname = json['nickname'] as String
+    ..avatarUrl = json['avatarUrl'] as String
+    ..signature = json['signature'] as String
+    ..city = json['city'] as int
+    ..province = json['province'] as int
+    ..backgroundUrl = json['backgroundUrl'] as String
+    ..expertTags =
+        (json['expertTags'] as List)?.map((e) => e as String)?.toList();
+}
+
+Map<String, dynamic> _$PlayListSubscriberToJson(PlayListSubscriber instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'nickname': instance.nickname,
+      'avatarUrl': instance.avatarUrl,
+      'signature': instance.signature,
+      'city': instance.city,
+      'province': instance.province,
+      'backgroundUrl': instance.backgroundUrl,
+      'expertTags': instance.expertTags,
+    };
+
+HighqualityPlayListWrap _$HighqualityPlayListWrapFromJson(
+    Map<String, dynamic> json) {
+  return HighqualityPlayListWrap()
     ..code = json['code'] as int
     ..playlists = (json['playlists'] as List)
-        ?.map((e) => e == null
-            ? null
-            : OverallListItem.fromJson(e as Map<String, dynamic>))
+        ?.map((e) =>
+            e == null ? null : PlayListItem.fromJson(e as Map<String, dynamic>))
         ?.toList();
 }
 
-Map<String, dynamic> _$OverallListWrapToJson(OverallListWrap instance) =>
+Map<String, dynamic> _$HighqualityPlayListWrapToJson(
+        HighqualityPlayListWrap instance) =>
     <String, dynamic>{
       'code': instance.code,
       'playlists': instance.playlists,
+    };
+
+CategoryPlayListWrap _$CategoryPlayListWrapFromJson(Map<String, dynamic> json) {
+  return CategoryPlayListWrap()
+    ..code = json['code'] as int
+    ..playlist = json['playlist'] == null
+        ? null
+        : PlayListItem.fromJson(json['playlist'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$CategoryPlayListWrapToJson(
+        CategoryPlayListWrap instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'playlist': instance.playlist,
     };

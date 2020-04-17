@@ -4,8 +4,8 @@ import 'package:zmusic/lib_common/bean/bean.dart';
 part 'bean.g.dart';
 
 @JsonSerializable()
-class OverallListItem {
-  @JsonKey(fromJson: _stringFromInt, toJson: _stringToInt)
+class PlayListItem {
+  @JsonKey(fromJson: _dynamicToString)
   String id;
 
   //歌单名
@@ -28,27 +28,83 @@ class OverallListItem {
   int trackCount;
   int trackNumberUpdateTime;
 
-  OverallListItem();
+  PlayListCreator creator;
 
-  factory OverallListItem.fromJson(Map<String, dynamic> json) =>
-      _$OverallListItemFromJson(json);
+  List<PlayListSubscriber> subscribers;
 
-  Map<String, dynamic> toJson() => _$OverallListItemToJson(this);
+  PlayListItem();
 
-  static int _stringToInt(String number) =>
-      number == null ? null : int.parse(number);
+  factory PlayListItem.fromJson(Map<String, dynamic> json) =>
+      _$PlayListItemFromJson(json);
 
-  static String _stringFromInt(int number) => number?.toString();
+  Map<String, dynamic> toJson() => _$PlayListItemToJson(this);
 }
 
 @JsonSerializable()
-class OverallListWrap extends ServerStatusBean {
-  List<OverallListItem> playlists;
+class NeteaseUserInfo {
+  @JsonKey(fromJson: _dynamicToString)
+  String userId;
+  String nickname;
+  String avatarUrl;
+  String signature;
 
-  OverallListWrap();
+  int city;
+  int province;
 
-  factory OverallListWrap.fromJson(Map<String, dynamic> json) =>
-      _$OverallListWrapFromJson(json);
+  String backgroundUrl;
 
-  Map<String, dynamic> toJson() => _$OverallListWrapToJson(this);
+  List<String> expertTags;
+
+  NeteaseUserInfo();
+
+  factory NeteaseUserInfo.fromJson(Map<String, dynamic> json) =>
+      _$NeteaseUserInfoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NeteaseUserInfoToJson(this);
 }
+
+@JsonSerializable()
+class PlayListCreator extends NeteaseUserInfo {
+  PlayListCreator();
+
+  factory PlayListCreator.fromJson(Map<String, dynamic> json) =>
+      _$PlayListCreatorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlayListCreatorToJson(this);
+}
+
+@JsonSerializable()
+class PlayListSubscriber extends NeteaseUserInfo {
+  PlayListSubscriber();
+
+  factory PlayListSubscriber.fromJson(Map<String, dynamic> json) =>
+      _$PlayListSubscriberFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlayListSubscriberToJson(this);
+}
+
+@JsonSerializable()
+class HighqualityPlayListWrap extends ServerStatusBean {
+  List<PlayListItem> playlists;
+
+  HighqualityPlayListWrap();
+
+  factory HighqualityPlayListWrap.fromJson(Map<String, dynamic> json) =>
+      _$HighqualityPlayListWrapFromJson(json);
+
+  Map<String, dynamic> toJson() => _$HighqualityPlayListWrapToJson(this);
+}
+
+@JsonSerializable()
+class CategoryPlayListWrap extends ServerStatusBean {
+  PlayListItem playlist;
+
+  CategoryPlayListWrap();
+
+  factory CategoryPlayListWrap.fromJson(Map<String, dynamic> json) =>
+      _$CategoryPlayListWrapFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CategoryPlayListWrapToJson(this);
+}
+
+String _dynamicToString(dynamic value) => value?.toString();
