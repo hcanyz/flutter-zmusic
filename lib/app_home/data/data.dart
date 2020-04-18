@@ -18,7 +18,9 @@ class NeteaseMusicApi implements MusicApi {
   NeteaseMusicApi._internal() {
     Https.dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions option) async {
-      if (option.method == 'POST' && _HOST.contains(option.uri.host)) {
+      if (option.method == 'POST' &&
+          _HOST.contains(option.uri.host) &&
+          option.extra["hookRequestDate"] == true) {
         debugPrint(
             '$_TAG   interceptor before: ${option.uri}   ${option.data}');
         neteaseInterceptor(option);
@@ -32,6 +34,18 @@ class NeteaseMusicApi implements MusicApi {
   }
 
   @override
+  Future<String> homeBannerList() {
+    return Https.dio
+        .postUri(_joinUri('/api/v2/banner/get'),
+            data: {"clientType": "pc"},
+            options: _joinOptions(hookRequestDate: true))
+        .then((Response value) {
+      debugPrint('$_TAG   homeBannerList response ${value.data}');
+      return value.data;
+    });
+  }
+
+  @override
   Future<HighqualityPlayListWrap> highqualityPlayList(int page,
       {int limit = 30}) {
     var params = {'limit': limit, 'offset': page * limit};
@@ -39,8 +53,9 @@ class NeteaseMusicApi implements MusicApi {
         .postUri(_joinUri('/weapi/playlist/highquality/list'),
             data: params, options: _joinOptions())
         .then((Response value) {
-      debugPrint('$_TAG   topList response ${value.data}');
-      return HighqualityPlayListWrap.fromJson(jsonDecode(value.data));
+      var result = HighqualityPlayListWrap.fromJson(jsonDecode(value.data));
+      debugPrint('$_TAG   highqualityList response $result');
+      return result;
     });
   }
 
@@ -92,12 +107,27 @@ class NeteaseMusicApi implements MusicApi {
         .postUri(_joinUri('/weapi/v3/playlist/detail'),
             data: params, options: _joinOptions())
         .then((Response value) {
-      debugPrint('$_TAG   topListByCategory response ${value.data}');
+      var result = CategoryPlayListWrap.fromJson(jsonDecode(value.data));
+      debugPrint('$_TAG   categoryPlayList response $result');
+      return result;
+    });
+  }
+
+  @override
+  Future<CategoryPlayListWrap> recommendPlayList(int page, {int limit = 30}) {
+    //TODO need login
+    var params = {'limit': limit, 'offset': page * limit};
+    return Https.dio
+        .postUri(_joinUri('/weapi/v1/discovery/recommend/songs'),
+            data: params, options: _joinOptions())
+        .then((Response value) {
       return CategoryPlayListWrap.fromJson(jsonDecode(value.data));
     });
   }
 
-  Options _joinOptions() => Options(contentType: ContentType.json.value);
+  Options _joinOptions({hookRequestDate = true}) => Options(
+      contentType: ContentType.json.value,
+      extra: {"hookRequestDate": hookRequestDate});
 
   Uri _joinUri(String path) {
     return Uri.parse('$_HOST$path');
