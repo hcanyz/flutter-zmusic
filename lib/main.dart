@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'app_home/data/data.dart';
+import 'package:netease_music_api/netease_music_api.dart';
 
 void main() {
   runApp(MyApp());
