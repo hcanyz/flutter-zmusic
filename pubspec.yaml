@@ -1,5 +1,5 @@
 name: zmusic
-description: A music player for flutter.
+description: A music player for flutter that imitation netease cloud music.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.

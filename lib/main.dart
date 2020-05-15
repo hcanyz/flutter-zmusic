@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:netease_music_api/netease_music_api.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await NeteaseMusicApi.init(provider: CookiePathProvider(), debug: true);
+
   runApp(MyApp());
 }
 
@@ -32,10 +36,6 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           NeteaseMusicApi().homeBannerList().then((value) {});
-          NeteaseMusicApi()
-              .categoryPlayList(NeteaseMusicApi.PLAYLIST_CATEGORY[0]["id"], 0)
-              .then((value) {});
-          NeteaseMusicApi().highqualityPlayList(0).then((value) {});
         },
         child: Icon(Icons.add),
       ),
