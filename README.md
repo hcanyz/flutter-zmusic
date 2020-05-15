@@ -21,9 +21,9 @@ A music player for flutter that imitation netease cloud music.
         - home                       首页
             z_api.dart
             
-    - common                        公共
+    - common                         公共
         
-    main.dart                       入口
+    main.dart                        入口
 ```
 #### 约定
 app目录中，每一个子目录代表一个独立模块，独立模块间不能直接调用代码，保证模块独立性。  
