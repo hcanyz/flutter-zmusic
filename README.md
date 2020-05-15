@@ -19,15 +19,15 @@ A music player for flutter that imitation netease cloud music.
             api.dart                 模块对外服务
             
         - home                       首页
-            api.dart
+            z_api.dart
             
     - common                        公共
         
     main.dart                       入口
 ```
 #### 约定
-app目录中，每一个子目录代表一个独立模块，独立模块间不能直接调用代码，保证模块独立性。
-如果模块间需要交互，通过各个模块中的api.dart对外暴露接口、方法、bean、常量等
+app目录中，每一个子目录代表一个独立模块，独立模块间不能直接调用代码，保证模块独立性。  
+如果模块间需要交互，通过各个模块中的z_api.dart对外暴露接口、方法、bean、常量等
 
 ### 编译环境
 ```text
