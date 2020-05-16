@@ -16,7 +16,10 @@ A music player for flutter that imitation netease cloud music.
     - app
         - splash                     首屏页
             _*.dart                  具体业务逻辑，外部不能直接调用
-            api.dart                 模块对外服务
+            z_api.dart               模块对外服务
+            
+        - login                      登录
+            z_api.dart
             
         - home                       首页
             z_api.dart
