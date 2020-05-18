@@ -22,7 +22,7 @@ class _LoginMainState extends State<LoginMain> {
           Positioned(
             top: 216 - MediaQuery.of(context).padding.top,
             child: Image.asset(
-              joinImageAssetPath('', 'icon_logo_circle.png'),
+              joinImageAssetPath('', 'logo_circle.png'),
               width: 72,
             ),
           ),
@@ -69,26 +69,26 @@ class _LoginMainState extends State<LoginMain> {
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
                         child: Image.asset(
-                          joinImageAssetPath('', 'icon_logo_circle.png'),
+                          joinImageAssetPath('', 'logo_circle.png'),
                           width: 31,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
                         child: Image.asset(
-                          joinImageAssetPath('', 'icon_logo_circle.png'),
+                          joinImageAssetPath('', 'logo_circle.png'),
                           width: 31,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
                         child: Image.asset(
-                          joinImageAssetPath('', 'icon_logo_circle.png'),
+                          joinImageAssetPath('', 'logo_circle.png'),
                           width: 31,
                         ),
                       ),
                       Image.asset(
-                        joinImageAssetPath('', 'icon_logo_circle.png'),
+                        joinImageAssetPath('', 'logo_circle.png'),
                         width: 31,
                       )
                     ],
