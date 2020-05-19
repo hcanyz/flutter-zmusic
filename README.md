@@ -13,7 +13,7 @@ A music player for flutter that imitation netease cloud music.
 ### 项目分包结构
 ```text
 - lib
-    - app []()
+    - app
         - splash                     首屏页
             _*.dart                  具体业务逻辑，外部不能直接调用
             z_api.dart               模块对外服务
