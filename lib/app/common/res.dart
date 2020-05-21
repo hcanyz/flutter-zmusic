@@ -4,7 +4,7 @@ const Color zmusic_secondary_color = Color(0xffe3584e);
 
 const Color zmusic_backgroundColor = Color(0xffdb2c1f);
 
-String joinImageAssetPath(String app, String image) {
+String joinImageAssetPath(String image, [String app]) {
   if (app == null || app.isEmpty) {
     return 'assets/images/$image';
   }

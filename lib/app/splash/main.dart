@@ -33,13 +33,13 @@ class _SplashMainState extends State<SplashMain> {
             Positioned(
               top: 200,
               child: Image.asset(
-                joinImageAssetPath('splash', 'splash_decoration.png'),
+                joinImageAssetPath('splash_decoration.png', 'splash'),
                 width: 212,
               ),
             ),
             Positioned(
               child: Image.asset(
-                  joinImageAssetPath('splash', 'splash_decoration_2.png')),
+                  joinImageAssetPath('splash_decoration_2.png', 'splash')),
               width: 94,
               bottom: 20,
             )
