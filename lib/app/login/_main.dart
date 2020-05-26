@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:zmusic/app/common/res.dart';
+import 'package:zmusic/app/home/z_api.dart';
+
+import 'z_api.dart';
 
 class LoginMain extends StatefulWidget {
   @override
@@ -7,10 +10,7 @@ class LoginMain extends StatefulWidget {
 }
 
 class _LoginMainState extends State<LoginMain> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool _protocolChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,8 @@ class _LoginMainState extends State<LoginMain> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   elevation: 0,
-                  onPressed: () {},
+                  onPressed: () =>
+                      Navigator.pushNamed(context, route_login_phone),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
@@ -59,7 +60,8 @@ class _LoginMainState extends State<LoginMain> {
                         side: BorderSide(color: zmusic_secondary_color),
                         borderRadius: BorderRadius.circular(20.0)),
                     elevation: 0,
-                    onPressed: () {},
+                    onPressed: () =>
+                        Navigator.pushNamed(context, route_home_main),
                   ),
                 ),
                 Padding(
@@ -69,26 +71,26 @@ class _LoginMainState extends State<LoginMain> {
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
                         child: Image.asset(
-                          joinImageAssetPath('logo_circle.png'),
+                          joinImageAssetPath('login_bywx.png', 'login'),
                           width: 31,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
                         child: Image.asset(
-                          joinImageAssetPath('logo_circle.png'),
+                          joinImageAssetPath('login_byqq.png', 'login'),
                           width: 31,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 32.0),
                         child: Image.asset(
-                          joinImageAssetPath('logo_circle.png'),
+                          joinImageAssetPath('login_bywb.png', 'login'),
                           width: 31,
                         ),
                       ),
                       Image.asset(
-                        joinImageAssetPath('logo_circle.png'),
+                        joinImageAssetPath('login_byemail.png', 'login'),
                         width: 31,
                       )
                     ],
@@ -98,10 +100,22 @@ class _LoginMainState extends State<LoginMain> {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Row(
                     children: [
-                      Checkbox(
-                        value: true,
-                        activeColor: zmusic_secondary_color,
-                        onChanged: (v) {},
+                      Transform.scale(
+                        scale: 0.5,
+                        transformHitTests: false,
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: Checkbox(
+                            value: _protocolChecked,
+                            activeColor: zmusic_secondary_color,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _protocolChecked = !_protocolChecked;
+                              });
+                            },
+                          ),
+                        ),
                       ),
                       Text(
                         '同意《用户协议》《隐私政策》《儿童隐私政策》',

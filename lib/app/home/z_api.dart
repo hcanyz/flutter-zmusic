@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:zmusic/app/splash/_main.dart';
 
-const String route_splash_main = '/splash/main';
+import '_main.dart';
 
-Route<dynamic> generateRouteSplash(RouteSettings settings) {
+const String route_home_main = '/home/main';
+
+Route<dynamic> generateRouteMain(RouteSettings settings) {
   switch (settings.name) {
-    case route_splash_main:
+    case route_home_main:
       return PageRouteBuilder(
           settings: settings,
           pageBuilder: (BuildContext context, Animation<double> animation,
                   Animation<double> secondaryAnimation) =>
-              SplashMain());
+              HomeMain());
   }
   return null;
 }

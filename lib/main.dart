@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: configRouters,
       initialRoute: initialRoute,
-      theme: ThemeData(backgroundColor: zmusic_backgroundColor),
+      theme: ThemeData(
+          backgroundColor: zmusic_backgroundColor,
+          unselectedWidgetColor: zmusic_primary_shallow_color),
     );
   }
 }
