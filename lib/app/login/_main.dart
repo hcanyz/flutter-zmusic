@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:zmusic/app/common/res.dart';
 import 'package:zmusic/app/home/z_api.dart';
@@ -9,8 +11,34 @@ class LoginMain extends StatefulWidget {
   _LoginMainState createState() => _LoginMainState();
 }
 
-class _LoginMainState extends State<LoginMain> {
+class _LoginMainState extends State<LoginMain>
+    with SingleTickerProviderStateMixin {
   bool _protocolChecked = false;
+
+  AnimationController _protocolAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _protocolAnimationController =
+        AnimationController(duration: Duration(milliseconds: 100), vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _protocolAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _checkSignProtocol(Function call) {
+    if (_protocolChecked) {
+      call();
+      return;
+    }
+    _protocolAnimationController.repeat();
+    Future.delayed(Duration(milliseconds: 233))
+        .whenComplete(() => _protocolAnimationController.stop());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +71,8 @@ class _LoginMainState extends State<LoginMain> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   elevation: 0,
-                  onPressed: () =>
-                      Navigator.pushNamed(context, route_login_phone),
+                  onPressed: () => _checkSignProtocol(
+                      () => Navigator.pushNamed(context, route_login_phone)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
@@ -60,68 +88,59 @@ class _LoginMainState extends State<LoginMain> {
                         side: BorderSide(color: zmusic_secondary_color),
                         borderRadius: BorderRadius.circular(20.0)),
                     elevation: 0,
-                    onPressed: () =>
-                        Navigator.pushNamed(context, route_home_main),
+                    onPressed: () => _checkSignProtocol(
+                        () => Navigator.pushNamed(context, route_home_main)),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 27.0),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 32.0),
-                        child: Image.asset(
-                          joinImageAssetPath('login_bywx.png', 'login'),
-                          width: 31,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 32.0),
-                        child: Image.asset(
-                          joinImageAssetPath('login_byqq.png', 'login'),
-                          width: 31,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 32.0),
-                        child: Image.asset(
-                          joinImageAssetPath('login_bywb.png', 'login'),
-                          width: 31,
-                        ),
-                      ),
-                      Image.asset(
-                        joinImageAssetPath('login_byemail.png', 'login'),
-                        width: 31,
-                      )
+                      buildThirdLogin(
+                          joinImageAssetPath('login_bywx.png', 'login'), () {}),
+                      buildThirdLogin(
+                          joinImageAssetPath('login_byqq.png', 'login'), () {}),
+                      buildThirdLogin(
+                          joinImageAssetPath('login_bywb.png', 'login'), () {}),
+                      buildThirdLogin(
+                          joinImageAssetPath('login_byemail.png', 'login'),
+                          () {},
+                          padding: false)
                     ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
-                  child: Row(
-                    children: [
-                      Transform.scale(
-                        scale: 0.5,
-                        transformHitTests: false,
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: Checkbox(
-                            value: _protocolChecked,
-                            activeColor: zmusic_secondary_color,
-                            onChanged: (bool value) {
-                              setState(() {
-                                _protocolChecked = !_protocolChecked;
-                              });
-                            },
+                  child: SlideTransition(
+                    position: new Tween(
+                      begin: Offset(0.0, 0.0),
+                      end: Offset(0.05, 0.0),
+                    ).animate(_protocolAnimationController),
+                    child: Row(
+                      children: [
+                        Transform.scale(
+                          scale: 0.5,
+                          transformHitTests: false,
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Checkbox(
+                              value: _protocolChecked,
+                              activeColor: zmusic_secondary_color,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _protocolChecked = !_protocolChecked;
+                                });
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      Text(
-                        '同意《用户协议》《隐私政策》《儿童隐私政策》',
-                        style: TextStyle(color: Colors.white, fontSize: 11),
-                      )
-                    ],
+                        Text(
+                          '同意《用户协议》《隐私政策》《儿童隐私政策》',
+                          style: TextStyle(color: Colors.white, fontSize: 11),
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -129,6 +148,26 @@ class _LoginMainState extends State<LoginMain> {
           )
         ]),
       ),
+    );
+  }
+
+  Widget buildThirdLogin(String icon, GestureTapCallback onTap,
+      {bool padding = true}) {
+    final c = GestureDetector(
+      onTap: () {
+        _checkSignProtocol(onTap);
+      },
+      child: Image.asset(
+        icon,
+        width: 31,
+      ),
+    );
+    if (!padding) {
+      return c;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(right: 32.0),
+      child: c,
     );
   }
 }

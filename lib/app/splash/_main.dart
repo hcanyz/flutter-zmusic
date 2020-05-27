@@ -15,6 +15,7 @@ class _SplashMainState extends State<SplashMain> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
+      Navigator.pop(context);
       Navigator.pushNamed(context, route_login_main);
     });
   }
