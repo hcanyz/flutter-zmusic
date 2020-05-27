@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netease_music_api/netease_music_api.dart';
 
-import 'app/common/res.dart';
+import 'common/res.dart';
 import 'routes.dart';
 
 void main() async {

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zmusic/app/common/res.dart';
 import 'package:zmusic/app/login/z_api.dart';
+import 'package:zmusic/common/res.dart';
 
 class SplashMain extends StatefulWidget {
   @override

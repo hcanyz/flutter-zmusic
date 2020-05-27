@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:zmusic/app/common/res.dart';
 import 'package:zmusic/app/home/z_api.dart';
+import 'package:zmusic/common/res.dart';
 
 import 'z_api.dart';
 
