@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:zmusic/app/home/z_api.dart';
 import 'package:zmusic/common/res.dart';
@@ -15,6 +13,7 @@ class _LoginMainState extends State<LoginMain>
     with SingleTickerProviderStateMixin {
   bool _protocolChecked = false;
 
+  Animation _protocolAnimation;
   AnimationController _protocolAnimationController;
 
   @override
@@ -22,6 +21,10 @@ class _LoginMainState extends State<LoginMain>
     super.initState();
     _protocolAnimationController =
         AnimationController(duration: Duration(milliseconds: 100), vsync: this);
+    _protocolAnimation = Tween(
+      begin: Offset(-0.015, 0.0),
+      end: Offset(0.015, 0.0),
+    ).animate(_protocolAnimationController);
   }
 
   @override
@@ -30,14 +33,23 @@ class _LoginMainState extends State<LoginMain>
     super.dispose();
   }
 
-  void _checkSignProtocol(Function call) {
+  void _checkSignProtocol(VoidCallback call) {
     if (_protocolChecked) {
       call();
       return;
     }
-    _protocolAnimationController.repeat();
-    Future.delayed(Duration(milliseconds: 233))
-        .whenComplete(() => _protocolAnimationController.stop());
+    _protocolAni(2);
+  }
+
+  void _protocolAni(int count) {
+    if (count <= 0) {
+      return;
+    }
+    _protocolAnimationController.forward().whenComplete(() {
+      _protocolAnimationController
+          .reverse()
+          .whenComplete(() => _protocolAni(count - 1));
+    });
   }
 
   @override
@@ -96,13 +108,13 @@ class _LoginMainState extends State<LoginMain>
                   padding: const EdgeInsets.only(top: 27.0),
                   child: Row(
                     children: [
-                      buildThirdLogin(
+                      _buildThirdLogin(
                           joinImageAssetPath('login_bywx.png', 'login'), () {}),
-                      buildThirdLogin(
+                      _buildThirdLogin(
                           joinImageAssetPath('login_byqq.png', 'login'), () {}),
-                      buildThirdLogin(
+                      _buildThirdLogin(
                           joinImageAssetPath('login_bywb.png', 'login'), () {}),
-                      buildThirdLogin(
+                      _buildThirdLogin(
                           joinImageAssetPath('login_byemail.png', 'login'),
                           () {},
                           padding: false)
@@ -112,10 +124,7 @@ class _LoginMainState extends State<LoginMain>
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: SlideTransition(
-                    position: new Tween(
-                      begin: Offset(0.0, 0.0),
-                      end: Offset(0.05, 0.0),
-                    ).animate(_protocolAnimationController),
+                    position: _protocolAnimation,
                     child: Row(
                       children: [
                         Transform.scale(
@@ -125,6 +134,7 @@ class _LoginMainState extends State<LoginMain>
                             width: 20,
                             height: 20,
                             child: Checkbox(
+                              checkColor: Colors.white54,
                               value: _protocolChecked,
                               activeColor: zmusic_secondary_color,
                               onChanged: (bool value) {
@@ -136,8 +146,16 @@ class _LoginMainState extends State<LoginMain>
                           ),
                         ),
                         Text(
-                          '同意《用户协议》《隐私政策》《儿童隐私政策》',
-                          style: TextStyle(color: Colors.white, fontSize: 11),
+                          '同意',
+                          style: TextStyle(
+                              color: _protocolChecked
+                                  ? Colors.white
+                                  : Colors.white54,
+                              fontSize: 8),
+                        ),
+                        Text(
+                          '《用户协议》 《隐私政策》 《儿童隐私政策》',
+                          style: TextStyle(color: Colors.white, fontSize: 8),
                         )
                       ],
                     ),
@@ -151,7 +169,7 @@ class _LoginMainState extends State<LoginMain>
     );
   }
 
-  Widget buildThirdLogin(String icon, GestureTapCallback onTap,
+  Widget _buildThirdLogin(String icon, GestureTapCallback onTap,
       {bool padding = true}) {
     final c = GestureDetector(
       onTap: () {

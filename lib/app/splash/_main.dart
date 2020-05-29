@@ -18,12 +18,13 @@ class _SplashMainState extends State<SplashMain> {
       Navigator.pop(context);
       Navigator.pushNamed(context, route_login_main);
     });
+
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: ConstrainedBox(
