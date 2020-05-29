@@ -56,6 +56,9 @@ class _LoginMainState extends State<LoginMain>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
+      appBar: AppBar(
+        brightness: Brightness.dark,
+      ),
       body: ConstrainedBox(
         constraints: BoxConstraints.expand(),
         child: Stack(alignment: Alignment.topCenter, children: [
@@ -74,7 +77,7 @@ class _LoginMainState extends State<LoginMain>
                   child: Text(
                     '手机号登录',
                     style:
-                        TextStyle(color: zmusic_secondary_color, fontSize: 16),
+                        TextStyle(color: color_secondary, fontSize: 16),
                   ),
                   minWidth: 260,
                   height: 39,
@@ -97,7 +100,7 @@ class _LoginMainState extends State<LoginMain>
                     height: 39,
                     padding: EdgeInsets.only(top: 10, bottom: 10),
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(color: zmusic_secondary_color),
+                        side: BorderSide(color: color_secondary),
                         borderRadius: BorderRadius.circular(20.0)),
                     elevation: 0,
                     onPressed: () => _checkSignProtocol(
@@ -136,7 +139,7 @@ class _LoginMainState extends State<LoginMain>
                             child: Checkbox(
                               checkColor: Colors.white54,
                               value: _protocolChecked,
-                              activeColor: zmusic_secondary_color,
+                              activeColor: color_secondary,
                               onChanged: (bool value) {
                                 setState(() {
                                   _protocolChecked = !_protocolChecked;

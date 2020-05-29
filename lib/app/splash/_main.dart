@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:zmusic/app/login/z_api.dart';
 import 'package:zmusic/common/res.dart';
 
@@ -15,17 +14,16 @@ class _SplashMainState extends State<SplashMain> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pop(context);
-      Navigator.pushNamed(context, route_login_main);
+      Navigator.popAndPushNamed(context, route_login_main);
     });
-
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        brightness: Brightness.dark,
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: ConstrainedBox(
         constraints: BoxConstraints.expand(),

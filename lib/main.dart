@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:netease_music_api/netease_music_api.dart';
 
 import 'common/res.dart';
@@ -13,6 +14,11 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  MyApp() {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,8 +27,16 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: configRouters,
       initialRoute: initialRoute,
       theme: ThemeData(
-          backgroundColor: zmusic_backgroundColor,
-          unselectedWidgetColor: zmusic_primary_shallow_color),
+          appBarTheme: AppBarTheme(
+              iconTheme: IconThemeData(color: color_text_primary),
+              textTheme: TextTheme(
+                  headline6: TextStyle(
+                      color: color_text_primary, fontSize: 18)),
+              color: Colors.transparent,
+              elevation: 0,
+              brightness: Brightness.light),
+          backgroundColor: color_background,
+          unselectedWidgetColor: color_primary_shallow),
     );
   }
 }
