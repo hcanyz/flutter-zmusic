@@ -87,7 +87,7 @@ class _LoginMainState extends State<LoginMain>
                       borderRadius: BorderRadius.circular(20.0)),
                   elevation: 0,
                   onPressed: () => _checkSignProtocol(
-                      () => Navigator.pushNamed(context, route_login_phone)),
+                      () => Navigator.pushNamed(context, route_login_phone_check)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),

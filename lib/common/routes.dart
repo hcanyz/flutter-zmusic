@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'app/home/z_api.dart';
-import 'app/login/z_api.dart';
-import 'app/splash/z_api.dart';
+import 'package:zmusic/app/home/z_api.dart';
+import 'package:zmusic/app/login/z_api.dart';
+import 'package:zmusic/app/splash/z_api.dart';
 
 const String initialRoute = route_splash_main;
 

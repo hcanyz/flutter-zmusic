@@ -142,7 +142,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "57938e3088dbeb062163560bd1ede69a5a652e68"
+      resolved-ref: "3a1429cdedae24569dd746e65c17ed1a6c25f06c"
       url: "git://github.com/hcanyz/flutter-netease-music-api.git"
     source: git
     version: "0.0.1"
@@ -248,7 +248,7 @@ packages:
       name: test_api
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.2.15"
+    version: "0.2.16"
   typed_data:
     dependency: transitive
     description:
