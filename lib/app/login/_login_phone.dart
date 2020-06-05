@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:netease_music_api/netease_music_api.dart';
+import 'package:zmusic/app/home/z_api.dart';
 import 'package:zmusic/app/login/z_api.dart';
 import 'package:zmusic/common/res.dart';
+import 'package:zmusic/common/toast_ext.dart';
 
 class PhoneCheck extends StatefulWidget {
   @override
@@ -19,6 +21,7 @@ class _PhoneCheckState extends State<PhoneCheck> {
 
   void _checkPhone() async {
     if (!_phoneNumChange(_phoneNum)) {
+      BotToastExt.showText(text: "请输入正确的手机号");
       return;
     }
     var result = await NeteaseMusicApi().checkCellPhoneExistence(_phoneNum);
@@ -123,10 +126,18 @@ class _PhoneLoginPasswordState extends State<PhoneLoginPassword> {
 
   void _loginByPassword() async {
     if (!_passwordChange7check(_phonePassword)) {
+      BotToastExt.showText(text: "请输入密码");
       return;
     }
     var result = await NeteaseMusicApi()
         .loginCellPhone(widget._phoneNum, _phonePassword);
+
+    if (result.code != RET_CODE_OK) {
+      BotToastExt.showText(text: result.realMsg);
+      return;
+    }
+    Navigator.pushNamedAndRemoveUntil(
+        context, route_home_main, (route) => true);
   }
 
   bool _passwordChange7check(String str) {

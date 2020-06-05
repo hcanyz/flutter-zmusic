@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zmusic/app/home/z_api.dart';
 import 'package:zmusic/common/res.dart';
+import 'package:zmusic/common/toast_ext.dart';
 
 import 'z_api.dart';
 
@@ -38,17 +39,18 @@ class _LoginMainState extends State<LoginMain>
       call();
       return;
     }
-    _protocolAni(2);
+    BotToastExt.showText(text: "请先勾选同意《用户协议》 《隐私政策》 《儿童隐私政策》");
+    _doProtocolAnimation(2);
   }
 
-  void _protocolAni(int count) {
+  void _doProtocolAnimation(int count) {
     if (count <= 0) {
       return;
     }
     _protocolAnimationController.forward().whenComplete(() {
       _protocolAnimationController
           .reverse()
-          .whenComplete(() => _protocolAni(count - 1));
+          .whenComplete(() => _doProtocolAnimation(count - 1));
     });
   }
 
@@ -76,8 +78,7 @@ class _LoginMainState extends State<LoginMain>
                 MaterialButton(
                   child: Text(
                     '手机号登录',
-                    style:
-                        TextStyle(color: color_secondary, fontSize: 16),
+                    style: TextStyle(color: color_secondary, fontSize: 16),
                   ),
                   minWidth: 260,
                   height: 39,
@@ -86,8 +87,8 @@ class _LoginMainState extends State<LoginMain>
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   elevation: 0,
-                  onPressed: () => _checkSignProtocol(
-                      () => Navigator.pushNamed(context, route_login_phone_check)),
+                  onPressed: () => _checkSignProtocol(() =>
+                      Navigator.pushNamed(context, route_login_phone_check)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
