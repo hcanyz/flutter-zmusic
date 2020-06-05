@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:netease_music_api/netease_music_api.dart';
@@ -24,8 +25,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'zmusic',
       debugShowCheckedModeBanner: false,
-      onGenerateRoute: configRouters,
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       initialRoute: initialRoute,
+      onGenerateRoute: configRouters,
       theme: ThemeData(
           appBarTheme: AppBarTheme(
               iconTheme: IconThemeData(color: color_text_primary),

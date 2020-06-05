@@ -28,6 +28,9 @@ dependencies:
     git:
       url: git://github.com/hcanyz/flutter-netease-music-api.git
 
+  # toast
+  bot_toast: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
