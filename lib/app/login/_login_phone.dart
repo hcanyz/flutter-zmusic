@@ -15,13 +15,13 @@ class PhoneCheck extends StatefulWidget {
 }
 
 class _PhoneCheckState extends State<PhoneCheck> {
-  var _phoneNum = "";
+  var _phoneNum = '';
 
   var _verified = false;
 
   void _checkPhone() async {
     if (!_phoneNumChange(_phoneNum)) {
-      BotToastExt.showText(text: "请输入正确的手机号");
+      BotToastExt.showText(text: '请输入正确的手机号');
       return;
     }
     var result = await NeteaseMusicApi().checkCellPhoneExistence(_phoneNum);
@@ -37,7 +37,7 @@ class _PhoneCheckState extends State<PhoneCheck> {
 
   bool _phoneNumChange(String str) {
     _phoneNum = str;
-    var verified = RegExp(r'[1][123456789]\d{9}').hasMatch(_phoneNum);
+    var verified = RegExp(r'[1]\d{10}').hasMatch(_phoneNum);
     if (verified != _verified) {
       setState(() {
         _verified = verified;
@@ -121,12 +121,12 @@ class PhoneLoginPassword extends StatefulWidget {
 }
 
 class _PhoneLoginPasswordState extends State<PhoneLoginPassword> {
-  var _phonePassword = "";
+  var _phonePassword = '';
   var _verified = false;
 
   void _loginByPassword() async {
     if (!_passwordChange7check(_phonePassword)) {
-      BotToastExt.showText(text: "请输入密码");
+      BotToastExt.showText(text: '请输入密码');
       return;
     }
     var result = await NeteaseMusicApi()
@@ -209,6 +209,38 @@ class PhoneLoginSms extends StatefulWidget {
 class _PhoneLoginSmsState extends State<PhoneLoginSms> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('手机号验证'),
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 59),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '验证码已发送至',
+              style: TextStyle(fontSize: 17, color: color_text_primary),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget._phoneNum,
+                  style: TextStyle(fontSize: 15, color: color_text_secondary),
+                ),
+                Text(
+                  '重新获取',
+                  style: TextStyle(fontSize: 16),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
