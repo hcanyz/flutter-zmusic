@@ -207,6 +207,8 @@ class PhoneLoginSms extends StatefulWidget {
 }
 
 class _PhoneLoginSmsState extends State<PhoneLoginSms> {
+  List<String> _captcha = List.filled(4, '');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,7 +231,7 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget._phoneNum,
+                  '+86 ${widget._phoneNum.replaceRange(3, 7, '****')}',
                   style: TextStyle(fontSize: 15, color: color_text_secondary),
                 ),
                 Text(
@@ -237,10 +239,56 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
                   style: TextStyle(fontSize: 16),
                 )
               ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 45, right: 45, top: 46),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: buildCaptchaInput(),
+              ),
             )
           ],
         ),
       ),
     );
+  }
+
+  void _captchaChange(index, str) {
+    _captcha[index] = str;
+    FocusScope.of(context).nextFocus();
+  }
+
+  List<Widget> buildCaptchaInput() {
+    return List.generate(4, (index) {
+      return SizedBox(
+          width: 48,
+          child: TextField(
+            cursorWidth: 0,
+            textAlign: TextAlign.center,
+            enableInteractiveSelection: false,
+            keyboardType: TextInputType.number,
+            inputFormatters: [_KeepOneTextInputFormatter()],
+            decoration: InputDecoration(
+              isDense: true,
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: color_text_secondary)),
+            ),
+            autofocus: index == 0,
+            onChanged: (str) {
+              _captchaChange(index, str);
+            },
+          ));
+    });
+  }
+}
+
+class _KeepOneTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return newValue.text.length == 0
+        ? newValue
+        : TextEditingValue(
+            text: newValue.text.substring(newValue.text.length - 1));
   }
 }
