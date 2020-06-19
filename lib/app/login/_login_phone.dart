@@ -207,7 +207,33 @@ class PhoneLoginSms extends StatefulWidget {
 }
 
 class _PhoneLoginSmsState extends State<PhoneLoginSms> {
-  List<String> _captcha = List.filled(4, '');
+  static const _captchaSize = 4;
+
+  List<String> _captcha = List.filled(_captchaSize, '');
+  List<FocusNode> _focusNodes = List.generate(_captchaSize, (index) {
+    return FocusNode();
+  });
+
+  void _loginByCaptcha() {}
+
+  void _captchaChange(index, String str) {
+    _captcha[index] = str;
+    if (str.isEmpty) {
+      return;
+    }
+    var findFocusCaptcha =
+        _captcha.sublist(index + 1) + _captcha.sublist(0, index);
+
+    var emptyIndex = findFocusCaptcha.indexWhere((element) => element.isEmpty);
+
+    if (emptyIndex != -1) {
+      FocusScope.of(context).requestFocus(
+          _focusNodes[(emptyIndex + index + 1) % _captcha.length]);
+    } else {
+      FocusScope.of(context).unfocus();
+      _loginByCaptcha();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,20 +272,15 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: buildCaptchaInput(),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _captchaChange(index, str) {
-    _captcha[index] = str;
-    FocusScope.of(context).nextFocus();
-  }
-
   List<Widget> buildCaptchaInput() {
-    return List.generate(4, (index) {
+    return List.generate(_captchaSize, (index) {
       return SizedBox(
           width: 48,
           child: TextField(
@@ -267,13 +288,17 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
             textAlign: TextAlign.center,
             enableInteractiveSelection: false,
             keyboardType: TextInputType.number,
-            inputFormatters: [_KeepOneTextInputFormatter()],
+            inputFormatters: [
+              _KeepLastOneCharInputFormatter(),
+              WhitelistingTextInputFormatter(RegExp(r'\d*'))
+            ],
             decoration: InputDecoration(
               isDense: true,
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: color_text_secondary)),
             ),
             autofocus: index == 0,
+            focusNode: _focusNodes[index],
             onChanged: (str) {
               _captchaChange(index, str);
             },
@@ -282,13 +307,14 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
   }
 }
 
-class _KeepOneTextInputFormatter extends TextInputFormatter {
+class _KeepLastOneCharInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return newValue.text.length == 0
         ? newValue
         : TextEditingValue(
-            text: newValue.text.substring(newValue.text.length - 1));
+            text: newValue.text.substring(newValue.text.length - 1),
+            selection: TextSelection.collapsed(offset: 1));
   }
 }
