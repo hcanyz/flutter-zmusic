@@ -208,31 +208,61 @@ class PhoneLoginSms extends StatefulWidget {
 
 class _PhoneLoginSmsState extends State<PhoneLoginSms> {
   static const _captchaSize = 4;
+  static const _whiteSpace = ' ';
 
-  List<String> _captcha = List.filled(_captchaSize, '');
-  List<FocusNode> _focusNodes = List.generate(_captchaSize, (index) {
-    return FocusNode();
-  });
+  List<String> _captcha;
+  List<FocusNode> _focusNodes;
 
   void _loginByCaptcha() {}
 
   void _captchaChange(index, String str) {
-    _captcha[index] = str;
-    if (str.isEmpty) {
-      return;
+    if (str != _whiteSpace) {
+      _captcha[index] = str;
+      if (isStrEmpty(str)) {
+        _moveItem(index, true);
+      } else {
+        _moveEmptyItemOrDone(index);
+      }
     }
-    var findFocusCaptcha =
-        _captcha.sublist(index + 1) + _captcha.sublist(0, index);
+  }
 
-    var emptyIndex = findFocusCaptcha.indexWhere((element) => element.isEmpty);
+  void _moveItem(index, bool pre) {
+    FocusScope.of(context)
+        .requestFocus(_focusNodes[(index + (pre ? -1 : 1)) % _captchaSize]);
+  }
+
+  void _moveEmptyItemOrDone(index) {
+    var findFocusCaptcha = _captcha.sublist(index) + _captcha.sublist(0, index);
+
+    var emptyIndex = findFocusCaptcha.indexWhere((str) => isStrEmpty(str));
 
     if (emptyIndex != -1) {
-      FocusScope.of(context).requestFocus(
-          _focusNodes[(emptyIndex + index + 1) % _captcha.length]);
+      FocusScope.of(context)
+          .requestFocus(_focusNodes[(emptyIndex + index) % _captchaSize]);
     } else {
       FocusScope.of(context).unfocus();
       _loginByCaptcha();
     }
+  }
+
+  bool isStrEmpty(String str) {
+    return str.isEmpty || str == _whiteSpace;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _captcha = List.filled(_captchaSize, _whiteSpace);
+    _focusNodes = List.generate(_captchaSize, (index) {
+      return FocusNode()
+        ..addListener(() {
+          if (_captcha[index].isEmpty) {
+            setState(() {
+              _captcha[index] = _whiteSpace;
+            });
+          }
+        });
+    });
   }
 
   @override
@@ -289,14 +319,23 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
             enableInteractiveSelection: false,
             keyboardType: TextInputType.number,
             inputFormatters: [
-              _KeepLastOneCharInputFormatter(),
-              WhitelistingTextInputFormatter(RegExp(r'\d*'))
+              _CaptchaInputFormatter(_whiteSpace),
+              WhitelistingTextInputFormatter(RegExp('[\\d$_whiteSpace]*'))
             ],
             decoration: InputDecoration(
               isDense: true,
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: color_text_secondary)),
             ),
+            textInputAction: TextInputAction.next,
+            controller: TextEditingController.fromValue(TextEditingValue(
+                text: _captcha[index],
+                selection: TextSelection.collapsed(
+                    offset: _captcha[index].length,
+                    affinity: TextAffinity.upstream))),
+            onSubmitted: (str) {
+              _moveItem(index, false);
+            },
             autofocus: index == 0,
             focusNode: _focusNodes[index],
             onChanged: (str) {
@@ -307,14 +346,25 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
   }
 }
 
-class _KeepLastOneCharInputFormatter extends TextInputFormatter {
+class _CaptchaInputFormatter extends TextInputFormatter {
+  String _whiteSpace;
+
+  _CaptchaInputFormatter(this._whiteSpace);
+
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    return newValue.text.length == 0
-        ? newValue
-        : TextEditingValue(
-            text: newValue.text.substring(newValue.text.length - 1),
-            selection: TextSelection.collapsed(offset: 1));
+    var result = '';
+    if (newValue.text == '') {
+      if (oldValue.text != _whiteSpace) {
+        result = _whiteSpace;
+      } else {
+        return newValue;
+      }
+    } else {
+      result = newValue.text.substring(newValue.text.length - 1);
+    }
+    return TextEditingValue(
+        text: result, selection: TextSelection.collapsed(offset: 1));
   }
 }
