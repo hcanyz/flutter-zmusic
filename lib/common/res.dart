@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 
-const Color color_primary_shallow = Color(0xffe7756d);
+const Color color_secondary_shallow = Color(0xffff7f7f);
 
 const Color color_secondary = Color(0xffff3a3a);
 
-const Color color_background = Color(0xffdb2c1f);
+const Color color_primary_shallow = Color(0xffe7756d);
+
+const Color color_primary = Color(0xffdb2c1f);
 
 const Color color_text_secondary = Color(0xff9f9f9f);
 

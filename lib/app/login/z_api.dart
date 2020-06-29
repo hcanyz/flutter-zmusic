@@ -5,13 +5,17 @@ import '_main.dart';
 
 const String route_login_main = '/login/main';
 
-const String route_login_phone_check = '/login/phone_check';
+const String _route_login_phone_check = '/login/phone_check';
 
 const String _route_login_phone_password = '/login/phone_pwd';
 
 const String _route_login_phone_sms = '/login/phone_sms';
 
 const String _route_login_phone_register = '/login/phone_register';
+
+void skipLoginPhoneCheck(BuildContext context) {
+  Navigator.pushNamed(context, _route_login_phone_check);
+}
 
 void skipLoginPhonePassword(BuildContext context, String phoneNum) {
   Navigator.pushNamed(context, _route_login_phone_password,
@@ -23,9 +27,9 @@ void skipLoginPhoneSms(BuildContext context, String phoneNum) {
       arguments: {'phoneNum': phoneNum});
 }
 
-void skipLoginRegister(BuildContext context, String phoneNum) {
+void skipLoginRegister(BuildContext context, String phoneNum, String captcha) {
   Navigator.pushNamed(context, _route_login_phone_register,
-      arguments: {'phoneNum': phoneNum});
+      arguments: {'phoneNum': phoneNum, 'captcha': captcha});
 }
 
 Route<dynamic> generateRouteLogin(RouteSettings settings) {
@@ -36,7 +40,7 @@ Route<dynamic> generateRouteLogin(RouteSettings settings) {
           pageBuilder: (BuildContext context, Animation<double> animation,
                   Animation<double> secondaryAnimation) =>
               LoginMain());
-    case route_login_phone_check:
+    case _route_login_phone_check:
       return PageRouteBuilder(
           settings: settings,
           pageBuilder: (BuildContext context, Animation<double> animation,
@@ -60,8 +64,8 @@ Route<dynamic> generateRouteLogin(RouteSettings settings) {
           settings: settings,
           pageBuilder: (BuildContext context, Animation<double> animation,
                   Animation<double> secondaryAnimation) =>
-              PhoneLoginRegister(
-                  (settings.arguments as Map)['phoneNum'] ?? ''));
+              PhoneLoginRegister((settings.arguments as Map)['phoneNum'] ?? '',
+                  (settings.arguments as Map)['captcha'] ?? ''));
   }
   return null;
 }

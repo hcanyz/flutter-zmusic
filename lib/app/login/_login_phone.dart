@@ -17,7 +17,6 @@ class PhoneCheck extends StatefulWidget {
 
 class _PhoneCheckState extends State<PhoneCheck> {
   var _phoneNum = '';
-
   var _verified = false;
 
   void _checkPhone() async {
@@ -60,7 +59,7 @@ class _PhoneCheckState extends State<PhoneCheck> {
           children: [
             Text(
               '未注册手机号登录后将自动创建帐号',
-              style: const TextStyle(color: color_text_secondary),
+              style: const TextStyle(color: color_text_secondary, fontSize: 13),
             ),
             Container(
               margin: const EdgeInsets.only(top: 28),
@@ -98,7 +97,7 @@ class _PhoneCheckState extends State<PhoneCheck> {
                 minWidth: double.infinity,
                 height: 39,
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
-                color: color_secondary,
+                color: _verified ? color_secondary : color_secondary_shallow,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),
                 elevation: 0,
@@ -137,8 +136,7 @@ class _PhoneLoginPasswordState extends State<PhoneLoginPassword> {
       BotToastExt.showText(text: result.realMsg);
       return;
     }
-    Navigator.pushNamedAndRemoveUntil(
-        context, route_home_main, (route) => true);
+    skipHomeMainSingleTask(context);
   }
 
   bool _passwordChange7check(String str) {
@@ -184,7 +182,7 @@ class _PhoneLoginPasswordState extends State<PhoneLoginPassword> {
                 minWidth: double.infinity,
                 height: 39,
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
-                color: color_secondary,
+                color: _verified ? color_secondary : color_secondary_shallow,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),
                 elevation: 0,
@@ -209,10 +207,11 @@ class PhoneLoginSms extends StatefulWidget {
 
 class _PhoneLoginSmsState extends State<PhoneLoginSms> {
   void _verifyCaptcha(List<String> captcha) async {
+    var captchaStr = captcha.join();
     var result =
         await NeteaseMusicApi().captchaVerify(widget._phoneNum, captcha.join());
     if (result.codeEnum == RetCode.Ok) {
-      skipLoginRegister(context, widget._phoneNum);
+      skipLoginRegister(context, widget._phoneNum, captchaStr);
     } else {
       BotToastExt.showText(text: result.realMsg);
     }
@@ -220,9 +219,7 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
 
   void _resendCaptcha() async {
     var result = await NeteaseMusicApi().captchaSend(widget._phoneNum);
-    if (result.codeEnum == RetCode.Ok) {
-
-    }
+    if (result.codeEnum == RetCode.Ok) {}
     BotToastExt.showText(text: result.realMsg);
   }
 
@@ -273,16 +270,90 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
 
 class PhoneLoginRegister extends StatefulWidget {
   final String _phoneNum;
+  final String _captcha;
 
-  PhoneLoginRegister(this._phoneNum);
+  PhoneLoginRegister(this._phoneNum, this._captcha);
 
   @override
   _PhoneLoginRegisterState createState() => _PhoneLoginRegisterState();
 }
 
 class _PhoneLoginRegisterState extends State<PhoneLoginRegister> {
+  var _phonePassword = '';
+  var _verified = false;
+
+  void _loginByPassword() async {
+    if (!_passwordChange7check(_phonePassword)) {
+      BotToastExt.showText(text: '请输入合适的密码');
+      return;
+    }
+    var result = await NeteaseMusicApi()
+        .registerCellPhone(widget._phoneNum, _phonePassword, widget._captcha);
+
+    if (result.codeEnum != RetCode.Ok) {
+      BotToastExt.showText(text: result.realMsg);
+      return;
+    }
+    skipHomeMainSingleTask(context);
+  }
+
+  bool _passwordChange7check(String str) {
+    _phonePassword = str;
+    var verified = RegExp(
+            r'((?=.*\d)(?=.*\D)|(?=.*[a-zA-Z])(?=.*[^a-zA-Z]))(?!^.*[\u4E00-\u9FA5].*$)^\S{8,20}$')
+        .hasMatch(str);
+    if (verified != _verified) {
+      setState(() {
+        _verified = verified;
+      });
+    }
+    return verified;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('手机号注册'),
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '请设置登录密码，8-20位字符，至少包含字母/数字/符号2种组合',
+              style: const TextStyle(color: color_text_secondary, fontSize: 13),
+            ),
+            TextField(
+              autofocus: true,
+              obscureText: true,
+              keyboardType: TextInputType.visiblePassword,
+              onChanged: _passwordChange7check,
+              decoration: InputDecoration(
+                  errorText: _verified ? null : '请输入合适的密码',
+                  hintStyle: TextStyle(color: color_text_hint)),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 37),
+              child: MaterialButton(
+                child: Text(
+                  '下一步',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                minWidth: double.infinity,
+                height: 39,
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                color: _verified ? color_secondary : color_secondary_shallow,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                elevation: 0,
+                onPressed: _loginByPassword,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

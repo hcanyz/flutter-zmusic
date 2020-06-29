@@ -87,8 +87,8 @@ class _LoginMainState extends State<LoginMain>
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0)),
                   elevation: 0,
-                  onPressed: () => _checkSignProtocol(() =>
-                      Navigator.pushNamed(context, route_login_phone_check)),
+                  onPressed: () =>
+                      _checkSignProtocol(() => skipLoginPhoneCheck(context)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
@@ -105,7 +105,7 @@ class _LoginMainState extends State<LoginMain>
                         borderRadius: BorderRadius.circular(20.0)),
                     elevation: 0,
                     onPressed: () => _checkSignProtocol(
-                        () => Navigator.pushNamed(context, route_home_main)),
+                        () => skipHomeMainSingleTask(context)),
                   ),
                 ),
                 Padding(

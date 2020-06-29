@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
               color: Colors.transparent,
               elevation: 0,
               brightness: Brightness.light),
-          backgroundColor: color_background,
+          backgroundColor: color_primary,
           unselectedWidgetColor: color_primary_shallow),
     );
   }
