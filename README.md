@@ -8,7 +8,7 @@ A music player for flutter that imitation netease cloud music.
   - [ ] login 50%
   - [ ] home
   - [ ] ...
-- [ ] 架构
+- [ ] 全局
   - [ ] fish redux
   - [ ] i18n
   - [ ] theme
