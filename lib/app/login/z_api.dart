@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '_login_phone.dart';
 import '_main.dart';
 
-const String route_login_main = '/login/main';
+const String _route_login_main = '/login/main';
 
 const String _route_login_phone_check = '/login/phone_check';
 
@@ -12,6 +12,10 @@ const String _route_login_phone_password = '/login/phone_pwd';
 const String _route_login_phone_sms = '/login/phone_sms';
 
 const String _route_login_phone_register = '/login/phone_register';
+
+void skipLoginMain(BuildContext context) {
+  Navigator.popAndPushNamed(context, _route_login_main);
+}
 
 void skipLoginPhoneCheck(BuildContext context) {
   Navigator.pushNamed(context, _route_login_phone_check);
@@ -34,7 +38,7 @@ void skipLoginRegister(BuildContext context, String phoneNum, String captcha) {
 
 Route<dynamic> generateRouteLogin(RouteSettings settings) {
   switch (settings.name) {
-    case route_login_main:
+    case _route_login_main:
       return PageRouteBuilder(
           settings: settings,
           pageBuilder: (BuildContext context, Animation<double> animation,

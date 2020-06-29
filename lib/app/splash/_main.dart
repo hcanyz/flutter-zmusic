@@ -13,9 +13,7 @@ class _SplashMainState extends State<SplashMain> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.popAndPushNamed(context, route_login_main);
-    });
+    Future.delayed(Duration(seconds: 2), () => {skipLoginMain(context)});
   }
 
   @override
