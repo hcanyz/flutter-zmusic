@@ -8,6 +8,7 @@ import 'package:zmusic/app/home/z_api.dart';
 import 'package:zmusic/app/login/z_api.dart';
 import 'package:zmusic/common/res.dart';
 import 'package:zmusic/common/toast_ext.dart';
+import 'package:zmusic/widget/captcha_input.dart';
 
 class PhoneCheck extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _PhoneCheckState extends State<PhoneCheck> {
       return;
     }
     var result = await NeteaseMusicApi().checkCellPhoneExistence(_phoneNum);
-    if (result.code != RET_CODE_OK) {
+    if (result.codeEnum != RetCode.Ok) {
       return;
     }
     if (result.needUseSms) {
@@ -132,7 +133,7 @@ class _PhoneLoginPasswordState extends State<PhoneLoginPassword> {
     var result = await NeteaseMusicApi()
         .loginCellPhone(widget._phoneNum, _phonePassword);
 
-    if (result.code != RET_CODE_OK) {
+    if (result.codeEnum != RetCode.Ok) {
       BotToastExt.showText(text: result.realMsg);
       return;
     }
@@ -207,62 +208,22 @@ class PhoneLoginSms extends StatefulWidget {
 }
 
 class _PhoneLoginSmsState extends State<PhoneLoginSms> {
-  static const _captchaSize = 4;
-  static const _whiteSpace = ' ';
-
-  List<String> _captcha;
-  List<FocusNode> _focusNodes;
-
-  void _loginByCaptcha() {}
-
-  void _captchaChange(index, String str) {
-    if (str != _whiteSpace) {
-      _captcha[index] = str;
-      if (isStrEmpty(str)) {
-        _moveItem(index, true);
-      } else {
-        _moveEmptyItemOrDone(index);
-      }
-    }
-  }
-
-  void _moveItem(index, bool pre) {
-    FocusScope.of(context)
-        .requestFocus(_focusNodes[(index + (pre ? -1 : 1)) % _captchaSize]);
-  }
-
-  void _moveEmptyItemOrDone(index) {
-    var findFocusCaptcha = _captcha.sublist(index) + _captcha.sublist(0, index);
-
-    var emptyIndex = findFocusCaptcha.indexWhere((str) => isStrEmpty(str));
-
-    if (emptyIndex != -1) {
-      FocusScope.of(context)
-          .requestFocus(_focusNodes[(emptyIndex + index) % _captchaSize]);
+  void _verifyCaptcha(List<String> captcha) async {
+    var result =
+        await NeteaseMusicApi().captchaVerify(widget._phoneNum, captcha.join());
+    if (result.codeEnum == RetCode.Ok) {
+      skipLoginRegister(context, widget._phoneNum);
     } else {
-      FocusScope.of(context).unfocus();
-      _loginByCaptcha();
+      BotToastExt.showText(text: result.realMsg);
     }
   }
 
-  bool isStrEmpty(String str) {
-    return str.isEmpty || str == _whiteSpace;
-  }
+  void _resendCaptcha() async {
+    var result = await NeteaseMusicApi().captchaSend(widget._phoneNum);
+    if (result.codeEnum == RetCode.Ok) {
 
-  @override
-  void initState() {
-    super.initState();
-    _captcha = List.filled(_captchaSize, _whiteSpace);
-    _focusNodes = List.generate(_captchaSize, (index) {
-      return FocusNode()
-        ..addListener(() {
-          if (_captcha[index].isEmpty) {
-            setState(() {
-              _captcha[index] = _whiteSpace;
-            });
-          }
-        });
-    });
+    }
+    BotToastExt.showText(text: result.realMsg);
   }
 
   @override
@@ -290,81 +251,38 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
                   '+86 ${widget._phoneNum.replaceRange(3, 7, '****')}',
                   style: TextStyle(fontSize: 15, color: color_text_secondary),
                 ),
-                Text(
-                  '重新获取',
-                  style: TextStyle(fontSize: 16),
+                GestureDetector(
+                  onTap: _resendCaptcha,
+                  child: Text(
+                    '重新获取',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 )
               ],
             ),
             Padding(
               padding: const EdgeInsets.only(left: 45, right: 45, top: 46),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: buildCaptchaInput(),
-              ),
+              child: CaptchaInput(_verifyCaptcha),
             ),
           ],
         ),
       ),
     );
   }
-
-  List<Widget> buildCaptchaInput() {
-    return List.generate(_captchaSize, (index) {
-      return SizedBox(
-          width: 48,
-          child: TextField(
-            cursorWidth: 0,
-            textAlign: TextAlign.center,
-            enableInteractiveSelection: false,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              _CaptchaInputFormatter(_whiteSpace),
-              WhitelistingTextInputFormatter(RegExp('[\\d$_whiteSpace]*'))
-            ],
-            decoration: InputDecoration(
-              isDense: true,
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: color_text_secondary)),
-            ),
-            textInputAction: TextInputAction.next,
-            controller: TextEditingController.fromValue(TextEditingValue(
-                text: _captcha[index],
-                selection: TextSelection.collapsed(
-                    offset: _captcha[index].length,
-                    affinity: TextAffinity.upstream))),
-            onSubmitted: (str) {
-              _moveItem(index, false);
-            },
-            autofocus: index == 0,
-            focusNode: _focusNodes[index],
-            onChanged: (str) {
-              _captchaChange(index, str);
-            },
-          ));
-    });
-  }
 }
 
-class _CaptchaInputFormatter extends TextInputFormatter {
-  String _whiteSpace;
+class PhoneLoginRegister extends StatefulWidget {
+  final String _phoneNum;
 
-  _CaptchaInputFormatter(this._whiteSpace);
+  PhoneLoginRegister(this._phoneNum);
 
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    var result = '';
-    if (newValue.text == '') {
-      if (oldValue.text != _whiteSpace) {
-        result = _whiteSpace;
-      } else {
-        return newValue;
-      }
-    } else {
-      result = newValue.text.substring(newValue.text.length - 1);
-    }
-    return TextEditingValue(
-        text: result, selection: TextSelection.collapsed(offset: 1));
+  _PhoneLoginRegisterState createState() => _PhoneLoginRegisterState();
+}
+
+class _PhoneLoginRegisterState extends State<PhoneLoginRegister> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
