@@ -5,7 +5,8 @@ import '_main.dart';
 const String _route_home_main = '/home/main';
 
 void skipHomeMainSingleTask(BuildContext context) {
-  Navigator.pushNamedAndRemoveUntil(context, _route_home_main, (route) => true);
+  Navigator.pushNamedAndRemoveUntil(
+      context, _route_home_main, (route) => false);
 }
 
 Route<dynamic> generateRouteMain(RouteSettings settings) {
