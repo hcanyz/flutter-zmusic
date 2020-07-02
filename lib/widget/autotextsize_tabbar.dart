@@ -20,8 +20,8 @@ class AutoTextSizeTabBar extends StatefulWidget {
 }
 
 class _AutoTextSizeTabBarState extends State<AutoTextSizeTabBar> {
-  int _curIndex;
-  int _nextIndex;
+  int _curIndex = 0;
+  int _nextIndex = 1;
   double _t;
   TextStyle _textStyleCur;
   TextStyle _textStyleNext;
@@ -36,8 +36,7 @@ class _AutoTextSizeTabBarState extends State<AutoTextSizeTabBar> {
       _curIndex = widget.controller.animation.value.floor();
       _nextIndex = widget.controller.animation.value.round();
       var value = (widget.controller.animation.value * 10).floor() / 10;
-      value = value - value.floor();
-      print(value);
+      value = double.parse((value - value.floor()).toStringAsFixed(1));
       if (_t != value) {
         setState(() {
           _textStyleCur = TextStyle.lerp(
