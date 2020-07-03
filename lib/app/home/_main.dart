@@ -14,13 +14,15 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     '云村',
     '视频',
   ];
+  final int initialIndex = 1;
 
   TabController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: _tabValues.length, vsync: this);
+    _controller = TabController(
+        initialIndex: initialIndex, length: _tabValues.length, vsync: this);
   }
 
   @override
