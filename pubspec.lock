@@ -14,7 +14,7 @@ packages:
       name: asn1lib
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.6.4"
+    version: "0.6.5"
   async:
     dependency: transitive
     description:
@@ -170,7 +170,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: f3d85afac3cb6ad6b42321af26bdeead38aeae9a
+      resolved-ref: "24eda4c89a87b5b7025c4d13e7e2e3fb88f036e8"
       url: "git://github.com/hcanyz/flutter-netease-music-api.git"
     source: git
     version: "0.0.2"
@@ -194,7 +194,7 @@ packages:
       name: path_provider_linux
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.0.1+1"
+    version: "0.0.1+2"
   path_provider_macos:
     dependency: transitive
     description:
