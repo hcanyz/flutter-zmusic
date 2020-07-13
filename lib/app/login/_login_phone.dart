@@ -9,6 +9,7 @@ import 'package:zmusic/app/login/z_api.dart';
 import 'package:zmusic/common/res.dart';
 import 'package:zmusic/common/toast_ext.dart';
 import 'package:zmusic/widget/captcha_input.dart';
+import 'package:zmusic/widget/choose_countries.dart';
 
 class PhoneCheck extends StatefulWidget {
   @override
@@ -46,6 +47,18 @@ class _PhoneCheckState extends State<PhoneCheck> {
     return verified;
   }
 
+  var _countryCode = "+86";
+  var _repetitionClick = true;
+
+  void _setCountryCode(String code) {
+    _repetitionClick = true;
+    if (code.isNotEmpty) {
+      setState(() {
+        _countryCode = "+$code";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,13 +87,24 @@ class _PhoneCheckState extends State<PhoneCheck> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '+86',
+                          _countryCode,
                           style: TextStyle(color: color_text_primary),
                         ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          color: color_text_primary,
-                        )
+                        GestureDetector(
+                          onTap: () => {
+                            if (_repetitionClick)
+                              {
+                                _repetitionClick = false,
+                                showChooseCountriesDialog(context, (value) {
+                                  _setCountryCode(value);
+                                })
+                              }
+                          },
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            color: color_text_primary,
+                          ),
+                        ),
                       ],
                     ),
                     hintText: '请输入手机号',
