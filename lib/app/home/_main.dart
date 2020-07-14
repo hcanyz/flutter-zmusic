@@ -52,7 +52,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _controller,
         children: _tabValues.asMap().entries.map((e) {
-          if (e.key == 0) {
+          if (e.key == 1) {
             return buildDiscoveryMain();
           }
           return Center(
