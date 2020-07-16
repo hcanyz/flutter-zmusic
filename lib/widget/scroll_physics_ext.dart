@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FixedSizePageScrollPhysics extends ScrollPhysics {
+class FixedSizePageScrollPhysics extends PageScrollPhysics {
   final double itemDimension;
 
   const FixedSizePageScrollPhysics({this.itemDimension, ScrollPhysics parent})
