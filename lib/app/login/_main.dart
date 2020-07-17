@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:netease_music_api/netease_music_api.dart';
 import 'package:zmusic/app/home/z_api.dart';
 import 'package:zmusic/common/res.dart';
 import 'package:zmusic/common/toast_ext.dart';
@@ -104,8 +105,11 @@ class _LoginMainState extends State<LoginMain>
                         side: BorderSide(color: color_secondary),
                         borderRadius: BorderRadius.circular(20.0)),
                     elevation: 0,
-                    onPressed: () => _checkSignProtocol(
-                        () => skipHomeMainSingleTask(context)),
+                    onPressed: () => _checkSignProtocol(() {
+                      NeteaseMusicApi()
+                          .loginAnonimous()
+                          .whenComplete(() => skipHomeMainSingleTask(context));
+                    }),
                   ),
                 ),
                 Padding(
