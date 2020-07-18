@@ -57,25 +57,8 @@ class _DiscoveryMainState extends State<DiscoveryMain>
         child: Column(
           children: [
             Padding(padding: EdgeInsets.only(top: 5)),
-            Container(
-              // 长宽比 2.65
-              height: (MediaQuery.of(context).size.width - 15 * 2) / 2.65,
-              child: PageView.builder(
-                  itemCount: _bannerData?.banners?.length ?? 0,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          _bannerData.banners[index].pic,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-            _AppQuickEntrance(_dragonBallData)
+            _Banner(_bannerData),
+            _DragonBall(_dragonBallData)
           ],
         ),
       ),
@@ -86,18 +69,50 @@ class _DiscoveryMainState extends State<DiscoveryMain>
   bool get wantKeepAlive => true;
 }
 
-class _AppQuickEntrance extends StatefulWidget {
-  final HomeDragonBallWrap _dragonBallData;
+class _Banner extends StatefulWidget {
+  final BannerListWrap _bannerData;
 
-  _AppQuickEntrance(this._dragonBallData);
+  _Banner(this._bannerData);
 
   @override
-  _AppQuickEntranceState createState() => _AppQuickEntranceState();
+  _BannerState createState() => _BannerState();
 }
 
-class _AppQuickEntranceState
-    extends _FixedSizePageScrollState<_AppQuickEntrance> {
-  _AppQuickEntranceState()
+class _BannerState extends State<_Banner> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // 长宽比 2.65
+      height: (MediaQuery.of(context).size.width - 15 * 2) / 2.65,
+      child: PageView.builder(
+          itemCount: widget._bannerData?.banners?.length ?? 0,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  widget._bannerData.banners[index].pic,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            );
+          }),
+    );
+  }
+}
+
+class _DragonBall extends StatefulWidget {
+  final HomeDragonBallWrap _dragonBallData;
+
+  _DragonBall(this._dragonBallData);
+
+  @override
+  _DragonBallState createState() => _DragonBallState();
+}
+
+class _DragonBallState extends _FixedSizePageScrollState<_DragonBall> {
+  _DragonBallState()
       : super(appIconCount: 5.5, appIconWidth: 40, appIconUnusedWidth: 15);
 
   @override
@@ -112,18 +127,48 @@ class _AppQuickEntranceState
           physics: FixedSizePageScrollPhysics(itemDimension: iconDimension),
           itemCount: _dragonBallData?.data?.length ?? 0,
           itemBuilder: (BuildContext context, int index) {
+            var ballItem = _dragonBallData.data[index];
+            Widget iconWidget = Image.network(
+              ballItem.iconUrl,
+              width: appIconWidth,
+              height: appIconWidth,
+            );
+            // 每日推荐 日期
+            if (ballItem.id == -1) {
+              iconWidget = Stack(
+                alignment: Alignment.center,
+                children: [
+                  iconWidget,
+                  Transform.translate(
+                    offset: Offset(0, 2),
+                    child: Text(
+                      '${DateTime.now().day}',
+                      style: TextStyle(
+                          color: color_primary_shallow,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              );
+            }
+            if (ballItem.skinSupport) {
+              iconWidget = DecoratedBox(
+                decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(appIconWidth / 2))),
+                child: iconWidget,
+              );
+            }
             return Container(
               width: appIconWidth,
               margin: EdgeInsets.only(right: iconMarginRight),
               child: Column(
                 children: [
-                  Image.network(
-                    _dragonBallData.data[index].iconUrl,
-                    width: appIconWidth,
-                    height: appIconWidth,
-                  ),
+                  iconWidget,
                   Text(
-                    _dragonBallData.data[index].name,
+                    ballItem.name,
                     style: TextStyle(fontSize: 10, color: color_text_secondary),
                   )
                 ],
