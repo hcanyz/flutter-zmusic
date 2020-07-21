@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:netease_music_api/netease_music_api.dart';
+import 'package:zmusic/common/res.dart';
 import 'package:zmusic/common/toast_ext.dart';
 
 class ChooseCountriesData {
@@ -135,8 +136,14 @@ class _ChooseCountriesWidgetState extends State<ChooseCountriesWidget> {
                 child: ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.only(left: 20.0),
-                  title: Text(data.zh),
-                  trailing: Text("+${data.code}"),
+                  title: Text(
+                    data.zh,
+                    style: TextStyle(fontSize: 14, color: color_text_primary),
+                  ),
+                  trailing: Text(
+                    "+${data.code}",
+                    style: TextStyle(fontSize: 14, color: color_text_secondary),
+                  ),
                   onTap: () {
                     Navigator.of(context).pop();
                     callback.call(data);
@@ -159,7 +166,10 @@ class _ChooseCountriesWidgetState extends State<ChooseCountriesWidget> {
               contentPadding: EdgeInsets.only(left: 20.0, right: 40.0),
               title: Text(
                 data.zh,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: color_text_primary),
               ),
             ),
           );
@@ -176,7 +186,8 @@ class _ChooseCountriesWidgetState extends State<ChooseCountriesWidget> {
           child: Text(
             navigation[index],
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+            style: TextStyle(
+                fontSize: 12, fontWeight: FontWeight.w400, color: Colors.white),
           ),
         ),
       ),
@@ -245,7 +256,11 @@ class _ChooseCountriesWidgetState extends State<ChooseCountriesWidget> {
                       Navigator.of(context).pop();
                     },
                   ),
-                  Text("选择国家和地区"),
+                  Text("选择国家和地区",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: color_text_primary,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
@@ -276,7 +291,7 @@ class _ChooseCountriesWidgetState extends State<ChooseCountriesWidget> {
                               decoration: BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(50)),
-                                  color: Colors.grey),
+                                  color: Color(0xffa3a3a3)),
                               height: 28.0 * navigation.length,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -293,15 +308,15 @@ class _ChooseCountriesWidgetState extends State<ChooseCountriesWidget> {
                           child: Visibility(
                             visible: showLetter,
                             child: Container(
-                              height: 80.0,
-                              width: 80.0,
+                              height: 85.0,
+                              width: 70.0,
                               decoration: BoxDecoration(
-                                color: Colors.black54,
+                                color: Color(0xff444444),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
+                                    BorderRadius.all(Radius.circular(4)),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.black54,
+                                      color: Color(0xff444444),
                                       offset: Offset(2.0, 2.0),
                                       blurRadius: 5.0),
                                 ],
