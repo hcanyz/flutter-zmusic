@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zmusic/app/discovery/z_api.dart';
+import 'package:zmusic/app/video/z_api.dart';
 import 'package:zmusic/common/res.dart';
 import 'package:zmusic/widget/autotextsize_tabbar.dart';
 
@@ -54,6 +55,9 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
         children: _tabValues.asMap().entries.map((e) {
           if (e.key == 1) {
             return buildDiscoveryMain();
+          }
+          if (e.key == 3) {
+            return buildVideoMain();
           }
           return Center(
             child: Text(e.value),
