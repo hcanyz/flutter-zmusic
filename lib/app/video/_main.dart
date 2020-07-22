@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zmusic/common/res.dart';
+
+import '_video_nav_data.dart';
+import '_video_tab_indicator.dart';
 
 class VideoMain extends StatefulWidget {
   @override
@@ -7,10 +11,64 @@ class VideoMain extends StatefulWidget {
 }
 
 class _VideoMainState extends State<VideoMain> {
+  final List<VideoNavData> _list = getVideoNavDataList();
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _list.length,
+      vsync: ScrollableState(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("视频111"),
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: FlexibleSpaceBar(
+          centerTitle: true,
+          titlePadding: EdgeInsets.only(bottom: 3),
+          title: TabBar(
+            tabs: _list.map((e) => Tab(text: e.navName,)).toList(),
+            controller: _tabController,
+            isScrollable: true,
+            indicator: VideoTabIndicator(
+              borderSide: BorderSide(
+                width: 2.0,
+                color: Colors.red,
+              ),
+            ),
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.bold
+            ),
+            unselectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.normal
+            ),
+            labelColor: Colors.red,
+            unselectedLabelColor: color_text_primary,
+          ),
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: _list
+            .map((e) => Center(
+                  child: Text(
+                    e.navName,
+                    style: TextStyle(color: Colors.red, fontSize: 30),
+                  ),
+                ))
+            .toList(),
+      ),
     );
   }
 }
