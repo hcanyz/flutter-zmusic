@@ -48,6 +48,15 @@ class _DiscoveryMainState extends State<DiscoveryMain>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    List<Widget> blockWidgets = [];
+    if (_blockPageData != null) {
+      final blocks = _blockPageData.data.blocks;
+      blockWidgets.addAll(List.generate(blocks.length, (index) {
+        return Column(
+          children: [_BlockHeader(blocks[index].uiElement)],
+        );
+      }));
+    }
     return RefreshIndicator(
       key: _indicator,
       onRefresh: () {
@@ -58,8 +67,8 @@ class _DiscoveryMainState extends State<DiscoveryMain>
           children: [
             Padding(padding: EdgeInsets.only(top: 5)),
             _Banner(_bannerData),
-            _DragonBall(_dragonBallData)
-          ],
+            _DragonBall(_dragonBallData),
+          ]..addAll(blockWidgets),
         ),
       ),
     );
@@ -155,7 +164,7 @@ class _DragonBallState extends _FixedSizePageScrollState<_DragonBall> {
             if (ballItem.skinSupport) {
               iconWidget = DecoratedBox(
                 decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: color_secondary,
                     borderRadius:
                         BorderRadius.all(Radius.circular(appIconWidth / 2))),
                 child: iconWidget,
@@ -209,5 +218,44 @@ abstract class _FixedSizePageScrollState<T extends StatefulWidget>
       iconDimension = appIconWidth + iconMarginRight;
     }
     return null;
+  }
+}
+
+class _BlockHeader extends StatefulWidget {
+  final HomeBlockPageUiElement _uiElement;
+
+  _BlockHeader(this._uiElement);
+
+  @override
+  _BlockHeaderState createState() => _BlockHeaderState();
+}
+
+class _BlockHeaderState extends State<_BlockHeader> {
+  @override
+  Widget build(BuildContext context) {
+    return Flex(
+      direction: Axis.horizontal,
+      children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Text(widget._uiElement.subTitle.title,
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          width: 62,
+          height: 22,
+          child: FlatButton(
+            color: Colors.white,
+            padding: EdgeInsets.all(0),
+            child: Text(widget._uiElement.button.text,
+                style: TextStyle(fontSize: 11)),
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: color_text_hint),
+                borderRadius: BorderRadius.circular(20.0)),
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
   }
 }
