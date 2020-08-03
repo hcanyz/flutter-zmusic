@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:netease_music_api/netease_music_api.dart';
+import 'package:zmusic/app/home/z_api.dart';
 import 'package:zmusic/app/login/z_api.dart';
 import 'package:zmusic/common/res.dart';
 
@@ -13,7 +15,14 @@ class _SplashMainState extends State<SplashMain> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () => {skipLoginMain(context)});
+    Future.delayed(
+        Duration(seconds: 2),
+        () => {
+              if (NeteaseMusicApi().usc.isLogined)
+                {skipHomeMainSingleTask(context)}
+              else
+                {skipLoginMain(context)}
+            });
   }
 
   @override
