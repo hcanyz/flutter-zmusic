@@ -21,14 +21,16 @@ void skipLoginPhoneCheck(BuildContext context) {
   Navigator.pushNamed(context, _route_login_phone_check);
 }
 
-void skipLoginPhonePassword(BuildContext context, String phoneNum) {
+void skipLoginPhonePassword(
+    BuildContext context, String phoneNum, String countryCode) {
   Navigator.pushNamed(context, _route_login_phone_password,
-      arguments: {'phoneNum': phoneNum});
+      arguments: {'phoneNum': phoneNum, 'countryCode': countryCode});
 }
 
-void skipLoginPhoneSms(BuildContext context, String phoneNum) {
+void skipLoginPhoneSms(
+    BuildContext context, String phoneNum, String countryCode) {
   Navigator.pushNamed(context, _route_login_phone_sms,
-      arguments: {'phoneNum': phoneNum});
+      arguments: {'phoneNum': phoneNum, 'countryCode': countryCode});
 }
 
 void skipLoginRegister(BuildContext context, String phoneNum, String captcha) {
@@ -51,25 +53,29 @@ Route<dynamic> generateRouteLogin(RouteSettings settings) {
                   Animation<double> secondaryAnimation) =>
               PhoneCheck());
     case _route_login_phone_password:
+      var arguments = settings.arguments as Map;
       return PageRouteBuilder(
           settings: settings,
           pageBuilder: (BuildContext context, Animation<double> animation,
                   Animation<double> secondaryAnimation) =>
               PhoneLoginPassword(
-                  (settings.arguments as Map)['phoneNum'] ?? ''));
+                  arguments['phoneNum'] ?? '', arguments['countryCode'] ?? ''));
     case _route_login_phone_sms:
+      var arguments = settings.arguments as Map;
       return PageRouteBuilder(
           settings: settings,
           pageBuilder: (BuildContext context, Animation<double> animation,
                   Animation<double> secondaryAnimation) =>
-              PhoneLoginSms((settings.arguments as Map)['phoneNum'] ?? ''));
+              PhoneLoginSms(
+                  arguments['phoneNum'] ?? '', arguments['countryCode'] ?? ''));
     case _route_login_phone_register:
+      var arguments = settings.arguments as Map;
       return PageRouteBuilder(
           settings: settings,
           pageBuilder: (BuildContext context, Animation<double> animation,
                   Animation<double> secondaryAnimation) =>
-              PhoneLoginRegister((settings.arguments as Map)['phoneNum'] ?? '',
-                  (settings.arguments as Map)['captcha'] ?? ''));
+              PhoneLoginRegister(
+                  arguments['phoneNum'] ?? '', arguments['captcha'] ?? ''));
   }
   return null;
 }

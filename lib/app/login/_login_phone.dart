@@ -25,14 +25,15 @@ class _PhoneCheckState extends State<PhoneCheck> {
       BotToastExt.showText(text: '请输入正确的手机号');
       return;
     }
-    var result = await NeteaseMusicApi().checkCellPhoneExistence(_phoneNum);
+    var result = await NeteaseMusicApi()
+        .checkCellPhoneExistence(_phoneNum, countrycode: _countryCode);
     if (result.codeEnum != RetCode.Ok) {
       return;
     }
     if (result.needUseSms) {
-      skipLoginPhoneSms(context, _phoneNum);
+      skipLoginPhoneSms(context, _phoneNum, _countryCode);
     } else {
-      skipLoginPhonePassword(context, _phoneNum);
+      skipLoginPhonePassword(context, _phoneNum, _countryCode);
     }
   }
 
@@ -47,14 +48,14 @@ class _PhoneCheckState extends State<PhoneCheck> {
     return verified;
   }
 
-  var _countryCode = "+86";
+  var _countryCode = "86";
   var _repetitionClick = true;
 
   void _setCountryCode(String code) {
     _repetitionClick = true;
     if (code.isNotEmpty) {
       setState(() {
-        _countryCode = "+$code";
+        _countryCode = code;
       });
     }
   }
@@ -87,7 +88,7 @@ class _PhoneCheckState extends State<PhoneCheck> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _countryCode,
+                          "+$_countryCode",
                           style: TextStyle(color: color_text_primary),
                         ),
                         GestureDetector(
@@ -137,8 +138,9 @@ class _PhoneCheckState extends State<PhoneCheck> {
 
 class PhoneLoginPassword extends StatefulWidget {
   final String _phoneNum;
+  final String _countryCode;
 
-  PhoneLoginPassword(this._phoneNum);
+  PhoneLoginPassword(this._phoneNum, this._countryCode);
 
   @override
   _PhoneLoginPasswordState createState() => _PhoneLoginPasswordState();
@@ -153,8 +155,9 @@ class _PhoneLoginPasswordState extends State<PhoneLoginPassword> {
       BotToastExt.showText(text: '请输入密码');
       return;
     }
-    var result = await NeteaseMusicApi()
-        .loginCellPhone(widget._phoneNum, _phonePassword);
+    var result = await NeteaseMusicApi().loginCellPhone(
+        widget._phoneNum, _phonePassword,
+        countryCode: widget._countryCode);
 
     if (result.codeEnum != RetCode.Ok) {
       BotToastExt.showText(text: result.realMsg);
@@ -222,8 +225,9 @@ class _PhoneLoginPasswordState extends State<PhoneLoginPassword> {
 
 class PhoneLoginSms extends StatefulWidget {
   final String _phoneNum;
+  final String _countryCode;
 
-  PhoneLoginSms(this._phoneNum);
+  PhoneLoginSms(this._phoneNum, this._countryCode);
 
   @override
   _PhoneLoginSmsState createState() => _PhoneLoginSmsState();
@@ -232,8 +236,9 @@ class PhoneLoginSms extends StatefulWidget {
 class _PhoneLoginSmsState extends State<PhoneLoginSms> {
   void _verifyCaptcha(List<String> captcha) async {
     var captchaStr = captcha.join();
-    var result =
-        await NeteaseMusicApi().captchaVerify(widget._phoneNum, captcha.join());
+    var result = await NeteaseMusicApi().captchaVerify(
+        widget._phoneNum, captcha.join(),
+        ctcode: widget._countryCode);
     if (result.codeEnum == RetCode.Ok) {
       skipLoginRegister(context, widget._phoneNum, captchaStr);
     } else {
@@ -242,7 +247,8 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
   }
 
   void _resendCaptcha() async {
-    var result = await NeteaseMusicApi().captchaSend(widget._phoneNum);
+    var result = await NeteaseMusicApi()
+        .captchaSend(widget._phoneNum, ctcode: widget._countryCode);
     if (result.codeEnum == RetCode.Ok) {}
     BotToastExt.showText(text: result.realMsg);
   }
@@ -269,7 +275,7 @@ class _PhoneLoginSmsState extends State<PhoneLoginSms> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '+86 ${widget._phoneNum.replaceRange(3, 7, '****')}',
+                  '+${widget._countryCode} ${widget._phoneNum.replaceRange(3, 7, '****')}',
                   style: TextStyle(fontSize: 15, color: color_text_secondary),
                 ),
                 GestureDetector(
