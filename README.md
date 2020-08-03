@@ -42,8 +42,14 @@ app目录中，每一个子目录代表一个独立模块，独立模块间不�
 
 ### flutter version
 ```text
-Flutter 1.20.0-3.0.pre.142 • channel master • https://github.com/flutter/flutter.git
-Framework • revision cfc0082db7 (5 hours ago) • 2020-07-06 23:59:01 -0400
-Engine • revision 0e9b250843
-Tools • Dart 2.9.0 (build 2.9.0-20.0.dev 69aba23371)
+flutter doctor
+Doctor summary (to see all details, run flutter doctor -v):
+[√] Flutter (Channel master, 1.21.0-6.0.pre.142, on Microsoft Windows [Version 10.0.18363.959], locale zh-CN)
+
+[√] Android toolchain - develop for Android devices (Android SDK version 29.0.3)
+[√] Chrome - develop for the web
+[√] Android Studio (version 4.0)
+[√] VS Code (version 1.47.3)
+[√] VS Code, 64-bit edition
+[√] Connected device (2 available)
 ```
