@@ -5,7 +5,7 @@ A music player for flutter that imitation netease cloud music.
 ### TODO
 - [ ] ui
   - [x] splash
-  - [ ] login 50%
+  - [x] login
   - [ ] home
   - [ ] ...
 - [ ] 全局
