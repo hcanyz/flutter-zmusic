@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:netease_music_api/netease_music_api.dart';
 import 'package:zmusic/app/discovery/z_api.dart';
 import 'package:zmusic/app/video/z_api.dart';
 import 'package:zmusic/common/res.dart';
+import 'package:zmusic/common/toast_ext.dart';
 import 'package:zmusic/widget/autotextsize_tabbar.dart';
 
 class HomeMain extends StatefulWidget {
@@ -30,7 +32,24 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: Row(
+          children: [
+            RaisedButton.icon(
+              icon: Icon(Icons.logout),
+              label: Text("注销"),
+              onPressed: () async {
+                var result = await NeteaseMusicApi().logout();
+                if (result.codeEnum == RetCode.Ok) {
+                  BotToastExt.showText(text: '登出成功');
+                } else {
+                  BotToastExt.showText(text: result.realMsg);
+                }
+              },
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
         flexibleSpace: FlexibleSpaceBar(
           centerTitle: true,
