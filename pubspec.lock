@@ -35,7 +35,7 @@ packages:
       name: bot_toast
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   characters:
     dependency: transitive
     description:
@@ -170,7 +170,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "7cdc2ff33a0a5466af6f87b5b1dd824a19867e73"
+      resolved-ref: e689492ddcad327d7099afba0acbf064f72b20e6
       url: "git://github.com/hcanyz/flutter-netease-music-api.git"
     source: git
     version: "0.0.2"

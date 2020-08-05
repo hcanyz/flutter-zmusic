@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:netease_music_api/netease_music_api.dart';
 import 'package:zmusic/common/res.dart';
+import 'package:zmusic/common/utils.dart';
 import 'package:zmusic/widget/scroll_physics_ext.dart';
 
 class DiscoveryMain extends StatefulWidget {
@@ -52,8 +53,15 @@ class _DiscoveryMainState extends State<DiscoveryMain>
     if (_blockPageData != null) {
       final blocks = _blockPageData.data.blocks;
       blockWidgets.addAll(List.generate(blocks.length, (index) {
+        var block = blocks[index];
+        Widget bodyBlock;
+        if (block.showType == 'HOMEPAGE_SLIDE_PLAYLIST') {
+          bodyBlock = _BlockBodyStylePlaylist(block.creatives);
+        } else {
+          bodyBlock = Text('body showType: `${block.showType}`');
+        }
         return Column(
-          children: [_BlockHeader(blocks[index].uiElement)],
+          children: [_BlockHeader(block.uiElement), bodyBlock],
         );
       }));
     }
@@ -62,14 +70,12 @@ class _DiscoveryMainState extends State<DiscoveryMain>
       onRefresh: () {
         return _requestData(true);
       },
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(padding: EdgeInsets.only(top: 5)),
-            _Banner(_bannerData),
-            _DragonBall(_dragonBallData),
-          ]..addAll(blockWidgets),
-        ),
+      child: ListView(
+        children: [
+          Padding(padding: EdgeInsets.only(top: 5)),
+          _Banner(_bannerData),
+          _DragonBall(_dragonBallData)
+        ]..addAll(blockWidgets),
       ),
     );
   }
@@ -178,7 +184,120 @@ class _DragonBallState extends _FixedSizePageScrollState<_DragonBall> {
                   iconWidget,
                   Text(
                     ballItem.name,
-                    style: TextStyle(fontSize: 10, color: color_text_secondary),
+                    style: TextStyle(fontSize: 10, color: color_text_primary),
+                  )
+                ],
+              ),
+            );
+          }),
+    );
+  }
+}
+
+class _BlockHeader extends StatefulWidget {
+  final HomeBlockPageUiElement _uiElement;
+
+  _BlockHeader(this._uiElement);
+
+  @override
+  _BlockHeaderState createState() => _BlockHeaderState();
+}
+
+class _BlockHeaderState extends State<_BlockHeader> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44,
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      child: Flex(
+        direction: Axis.horizontal,
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Text(widget._uiElement.subTitle.title,
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+          ),
+          SizedBox(
+            width: 62,
+            height: 22,
+            child: FlatButton(
+              color: Colors.white,
+              padding: EdgeInsets.all(0),
+              child: Text(widget._uiElement.button.text,
+                  style: TextStyle(fontSize: 11)),
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: color_text_hint),
+                  borderRadius: BorderRadius.circular(20.0)),
+              onPressed: () {},
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BlockBodyStylePlaylist extends StatefulWidget {
+  final List<HomeBlockPageCreative> _creatives;
+
+  _BlockBodyStylePlaylist(this._creatives);
+
+  @override
+  _BlockBodyStylePlaylistState createState() => _BlockBodyStylePlaylistState();
+}
+
+class _BlockBodyStylePlaylistState
+    extends _FixedSizePageScrollState<_BlockBodyStylePlaylist> {
+  _BlockBodyStylePlaylistState()
+      : super(appIconCount: 3.15, appIconWidth: 100.66, appIconUnusedWidth: 15);
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Container(
+      height: 134,
+      padding: EdgeInsets.only(left: appIconUnusedWidth),
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          physics: FixedSizePageScrollPhysics(itemDimension: iconDimension),
+          itemCount: widget._creatives.length,
+          itemBuilder: (BuildContext context, int index) {
+            var creative = widget._creatives[index];
+            Widget imgWidget = Stack(
+              children: [
+                Image.network(
+                  creative.uiElement.image.imageUrl,
+                  width: appIconWidth,
+                  height: appIconWidth,
+                ),
+                Positioned(
+                    right: 2,
+                    top: 1,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                          size: 11,
+                        ),
+                        Text(
+                            '${convergenceAmountUnit(creative.resources[0].resourceExtInfo.playCount)}',
+                            style: TextStyle(fontSize: 11, color: Colors.white))
+                      ],
+                    ))
+              ],
+            );
+            return Container(
+              width: appIconWidth,
+              margin: EdgeInsets.only(right: iconMarginRight),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  imgWidget,
+                  Text(
+                    creative.uiElement.mainTitle.title,
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 11, color: color_text_primary),
                   )
                 ],
               ),
@@ -210,52 +329,11 @@ abstract class _FixedSizePageScrollState<T extends StatefulWidget>
 
   @override
   Widget build(BuildContext context) {
-    if (iconMarginRight == 0 || iconDimension == 0) {
-      iconMarginRight = (MediaQuery.of(context).size.width -
-              appIconUnusedWidth -
-              appIconWidth * appIconCount) /
-          appIconCount.floor();
-      iconDimension = appIconWidth + iconMarginRight;
-    }
+    iconMarginRight = (MediaQuery.of(context).size.width -
+            appIconUnusedWidth -
+            appIconWidth * appIconCount) /
+        appIconCount.floor();
+    iconDimension = appIconWidth + iconMarginRight;
     return null;
-  }
-}
-
-class _BlockHeader extends StatefulWidget {
-  final HomeBlockPageUiElement _uiElement;
-
-  _BlockHeader(this._uiElement);
-
-  @override
-  _BlockHeaderState createState() => _BlockHeaderState();
-}
-
-class _BlockHeaderState extends State<_BlockHeader> {
-  @override
-  Widget build(BuildContext context) {
-    return Flex(
-      direction: Axis.horizontal,
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text(widget._uiElement.subTitle.title,
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-        ),
-        SizedBox(
-          width: 62,
-          height: 22,
-          child: FlatButton(
-            color: Colors.white,
-            padding: EdgeInsets.all(0),
-            child: Text(widget._uiElement.button.text,
-                style: TextStyle(fontSize: 11)),
-            shape: RoundedRectangleBorder(
-                side: BorderSide(color: color_text_hint),
-                borderRadius: BorderRadius.circular(20.0)),
-            onPressed: () {},
-          ),
-        ),
-      ],
-    );
   }
 }
