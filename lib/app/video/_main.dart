@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zmusic/app/video/z_api.dart';
 import 'package:zmusic/common/res.dart';
 
 import '_video_nav_data.dart';
@@ -38,7 +39,11 @@ class _VideoMainState extends State<VideoMain> {
           centerTitle: true,
           titlePadding: EdgeInsets.only(bottom: 3),
           title: TabBar(
-            tabs: _list.map((e) => Tab(text: e.navName,)).toList(),
+            tabs: _list
+                .map((e) => Tab(
+                      text: e.navName,
+                    ))
+                .toList(),
             controller: _tabController,
             isScrollable: true,
             indicator: VideoTabIndicator(
@@ -47,12 +52,8 @@ class _VideoMainState extends State<VideoMain> {
                 color: Colors.red,
               ),
             ),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold
-            ),
-            unselectedLabelStyle: TextStyle(
-                fontWeight: FontWeight.normal
-            ),
+            labelStyle: TextStyle(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
             labelColor: Colors.red,
             unselectedLabelColor: color_text_primary,
           ),
@@ -60,13 +61,18 @@ class _VideoMainState extends State<VideoMain> {
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _list
-            .map((e) => Center(
+        children: _list.asMap().entries.map((e) {
+                if(e.key == 0){
+                  return buildVideoListPage();
+                }
+                return Center(
                   child: Text(
-                    e.navName,
+                    e.value.navName,
                     style: TextStyle(color: Colors.red, fontSize: 30),
                   ),
-                ))
+                );
+              }
+            )
             .toList(),
       ),
     );
